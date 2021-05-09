@@ -13,10 +13,28 @@ const routes = [
       import(/* webpackChunkName: "listing" */ '../views/Listing.vue')
   },
   {
+    path: '/listing/:id/detail',
+    name: 'listing-id-detail',
+    meta: {
+      layout: 'blank'
+    },
+    component: () =>
+      import(/* webpackChunkName: "detail" */ '../views/Detail.vue')
+  },
+  {
     path: '/saved-list',
     name: 'saved-list',
     component: () =>
       import(/* webpackChunkName: "saved-list" */ '../views/SavedList.vue')
+  },
+  {
+    path: '/saved-list/create',
+    name: 'saved-list-create',
+    meta: {
+      layout: 'blank'
+    },
+    component: () =>
+      import(/* webpackChunkName: "saved-list" */ '../views/Create.vue')
   },
   {
     path: '/my-team',

@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@tailwindcss/forms": "^0.3.2",
+    "@tailwindcss/line-clamp": "^0.2.0",
     "core-js": "^3.10.2",
     "feather-icons": "^4.28.0",
     "register-service-worker": "^1.7.1",
