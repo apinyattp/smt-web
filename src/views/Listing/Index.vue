@@ -20,7 +20,7 @@
     >
       <img src="https://placekitten.com/58/58" />
       <div class="py-2 px-3">
-        <div class="font-medium text-gold-500 mb-1">Name Surname</div>
+        <div class="font-medium text-gold-500 mb-1">{{ name }}</div>
         <div class="text-xs text-gold-300">Admin 1</div>
       </div>
       <div class="px-2">
@@ -31,7 +31,7 @@
   <search-filter></search-filter>
   <h5 class="text-gold-300 mb-6">Listing</h5>
   <div class="relative space-y-6">
-    <card 
+    <card
       v-for="list in a_lists"
       :key="list.id"
       :items="list"
@@ -43,13 +43,17 @@
 <script>
 import SearchFilter from '@/components/SearchFilter.vue'
 import { HTTP } from '@/config/axios.js'
-import { getToken } from '@/config/utils.js'
+import { getToken, getName } from '@/config/utils.js'
 
 export default {
-  data () {
+  components: {
+    SearchFilter
+  },
+  data() {
     return {
       a_lists: [],
       es_type: {},
+      name: getName('user'),
       params: {
         token: getToken('user'),
         search: '',
@@ -76,9 +80,6 @@ export default {
   },
   mounted() {
     this.fetchData()
-  },
-  components: {
-    SearchFilter
   },
   methods: {
     fetchData() {

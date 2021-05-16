@@ -23,6 +23,13 @@
     return getStore(name).token
   }
   /**
+    * Get localStorage token
+  */
+  export const getName = (name) => {
+    if (!name) return
+    return getStore(name).name
+  }
+  /**
    * Clear localStorage
   */
   export const removeItem = (name) => {
