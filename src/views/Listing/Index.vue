@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import SearchFilter from '../components/SearchFilter.vue'
+import SearchFilter from '@/components/SearchFilter.vue'
 
 export default {
   components: {

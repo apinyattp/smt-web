@@ -1,7 +1,10 @@
 <template>
-  <div class="text-gold-400 mb-3 font-medium text-sm mx-2">{{ label }}</div>
+  <div v-if="label" class="text-gold-400 mb-3 font-medium text-sm mx-2">
+    {{ label }}
+  </div>
   <div
     class="dropdown text-gold-300 border-b border-gold-600 pb-2 cursor-pointer"
+    :class="additionalSelectClass"
     tabindex="-1"
   >
     <div class="relative flex items-center mx-2 z-0">
@@ -49,7 +52,11 @@ export default {
     },
     label: {
       type: String,
-      default: 'label'
+      default: ''
+    },
+    additionalSelectClass: {
+      type: String,
+      default: ''
     },
     options: {
       type: Array,

@@ -35,7 +35,7 @@
       <div class="flex -mx-3 text-gold-500 font-bold justify-end mt-auto">
         <router-link
           class="flex items-center px-3"
-          :to="{ name: 'listing-id-detail', params: { id: 1 } }"
+          :to="{ name: 'listing-detail', params: { id: 1 } }"
         >
           <vue-feather type="eye" stroke-width="1"></vue-feather>
           <span class="ml-2">More details</span>

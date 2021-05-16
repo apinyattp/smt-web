@@ -24,8 +24,8 @@
     </div>
     <div class="flex w-1/4 px-2 py-3 items-end">
       <div class="flex space-x-2">
-        <button class="btn-secondary">ล้างข้อมูล</button>
-        <button class="btn-primary">ตกลง</button>
+        <button class="btn-secondary rounded py-2 px-6">ล้างข้อมูล</button>
+        <button class="btn-primary rounded py-2 px-6">ตกลง</button>
       </div>
     </div>
   </div>
@@ -33,6 +33,8 @@
 
 <script>
 import BaseSelect from './Forms/BaseSelect.vue'
+// import 'flatpickr/dist/flatpickr.css'
+// import 'flatpickr/dist/themes/dark.css'
 
 export default {
   components: {
@@ -40,6 +42,30 @@ export default {
   },
   data() {
     return {
+      config: {
+        altInputClass: 'invisible',
+        wrap: true, // set wrap to true only when using 'input-group'
+        altFormat: 'M j, Y',
+        altInput: true,
+        dateFormat: 'Y-m-d'
+      },
+      searchForm: {
+        search: '',
+        user_id_list: '',
+        type: '',
+        sort: 'date_desc',
+        comeFrom: '',
+        perpage: 50,
+        page: 1,
+        hilight: '',
+        token:
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlYWFjOWI2OGVhZDY4MWE5MGNkZTM5MCIsInNhbHQiOiI0OWI2YTk4My0zYzNhLTcyMWUtZWMzNi0zZDRkZGQ3YjQzNjYiLCJpYXQiOjE2MTk5NjAxNjksImV4cCI6MTYyMDA0NjU2OX0.qcaemkVl2rhpyewveXd9Wsbug_AbQf4T6VQIXFkEnTo',
+        user_id: '',
+        startDate: '',
+        endDate: '',
+        predict_type: '',
+        is_listing: 1
+      },
       date: '',
       dataType: '',
       source: '',

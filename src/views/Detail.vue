@@ -46,6 +46,11 @@
               {{ getContent() }}
             </pre>
           </sub-section>
+          <sub-section title="รายละเอียดเจ้าของบ้าน" icon="align-left">
+            <pre class="whitespace-pre-line font-medium">
+              {{ getContent() }}
+            </pre>
+          </sub-section>
           <sub-section title="รูปภาพ (สูงสุด 20 รูป)" icon="align-left">
             <div class="flex flex-wrap -mx-3">
               <div v-for="n in 8" :key="n" class="w-1/4 px-3 py-2">

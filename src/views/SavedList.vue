@@ -32,14 +32,14 @@
   <div class="flex justify-between items-center mb-6">
     <h3 class="text-gold-300">My Listing</h3>
     <router-link
-      :to="{ name: 'saved-list-create' }"
-      class="btn-primary flex items-center leading-loose"
+      :to="{ name: 'listing-create' }"
+      class="btn-primary rounded py-2 px-6 flex items-center leading-loose"
     >
       <vue-feather size="18" stroke-width="1" type="plus-square"></vue-feather>
       <span class="ml-2">สร้าง Listing ใหม่</span>
     </router-link>
   </div>
-  <div class="table-wrapper rounded-lg">
+  <div class="table-wrapper rounded-lg mb-40">
     <table class="table-auto border-collapse w-full">
       <thead>
         <tr>
@@ -61,7 +61,7 @@
           </td>
           <td>
             <div class="text-gold-200">ศุภาลัย</div>
-            <div class="text-sm text-gray-300">ลาดพร้าว</div>
+            <div class="text-sm text-gray-200">ลาดพร้าว</div>
           </td>
           <td class="">ให้เช่า</td>
           <td class="text-center">คุณเอ</td>
@@ -75,19 +75,41 @@
             ></vue-feather>
           </td>
           <td>
-            <div class="space-x-3">
-              <button
-                class="btn rounded-full py-3 px-6 hover:bg-gray-400 active:bg-gray-500"
-              >
-                <div class="flex items-center">
-                  <span class="mr-2">จัดการ</span>
-                  <vue-feather
-                    stroke-width="1"
-                    type="chevron-down"
-                    size="20"
-                  ></vue-feather>
-                </div>
-              </button>
+            <div class="flex space-x-3">
+              <popover>
+                <template #default="{ isOpen, close, open }">
+                  <div class="flex flex-col items-center relative">
+                    <button
+                      class="btn bg-gray-500 rounded-full py-3 px-6 hover:bg-gray-400 active:bg-gray-500"
+                      @focusout="close"
+                      @focusin="open"
+                    >
+                      <div class="flex items-center">
+                        <span class="mr-2">จัดการ</span>
+                        <vue-feather
+                          stroke-width="1"
+                          type="chevron-down"
+                          size="20"
+                        ></vue-feather>
+                      </div>
+                    </button>
+                    <transition appear name="slide-fade" mode="out-in">
+                      <div
+                        v-if="isOpen"
+                        class="absolute w-40 text-gold-300 bg-gray-400 shadow-xl rounded z-10 top-full mt-2 space-y-4 py-6 px-5 text-sm"
+                      >
+                        <router-link
+                          :to="{ name: 'listing-edit', params: { id: n } }"
+                          >แก้ไขข้อมูล</router-link
+                        >
+                        <div>สถานะการขาย</div>
+                        <div>นัดหมายการติดตาม</div>
+                        <div>รายงาน/ปรับปรุง</div>
+                      </div>
+                    </transition>
+                  </div>
+                </template>
+              </popover>
               <button
                 class="btn rounded-full py-3 px-6 hover:bg-gray-400 active:bg-gray-500"
               >
@@ -110,10 +132,14 @@
 
 <script>
 import SearchFilter from '../components/SearchFilter.vue'
+import Popover from '../components/Popover'
+
 export default {
   components: {
-    SearchFilter
-  }
+    SearchFilter,
+    Popover
+  },
+  mounted() {}
 }
 </script>
 
@@ -127,7 +153,7 @@ table {
     @apply py-5 px-6 text-gray-200;
   }
   tbody > tr:nth-child(even) {
-    background: rgba(#43444b, 0.6);
+    background: rgba(#5a5b63, 0.25);
   }
 }
 
