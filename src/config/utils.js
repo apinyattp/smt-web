@@ -25,9 +25,9 @@
   /**
     * Get localStorage token
   */
-  export const getName = (name) => {
+  export const getUserDetail = (name) => {
     if (!name) return
-    return getStore(name).name
+    return getStore(name).userDetail
   }
   /**
    * Clear localStorage

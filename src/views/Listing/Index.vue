@@ -20,8 +20,8 @@
     >
       <img src="https://placekitten.com/58/58" />
       <div class="py-2 px-3">
-        <div class="font-medium text-gold-500 mb-1">{{ name }}</div>
-        <div class="text-xs text-gold-300">Admin 1</div>
+        <div class="font-medium text-gold-500 mb-1">{{ userDetail.name }}</div>
+        <div class="text-xs text-gold-300">{{ userDetail.role }}</div>
       </div>
       <div class="px-2">
         <vue-feather class="text-dark-500" type="chevron-down"></vue-feather>
@@ -43,7 +43,7 @@
 <script>
 import SearchFilter from '@/components/SearchFilter.vue'
 import { HTTP } from '@/config/axios.js'
-import { getToken, getName } from '@/config/utils.js'
+import { getToken, getUserDetail } from '@/config/utils.js'
 
 export default {
   components: {
@@ -53,7 +53,7 @@ export default {
     return {
       a_lists: [],
       es_type: {},
-      name: getName('user'),
+      userDetail: getUserDetail('user'),
       params: {
         token: getToken('user'),
         search: '',
@@ -88,6 +88,7 @@ export default {
       }).then((response) => {
         this.a_lists = response.data.data
         this.es_type = response.data.es_type
+        this.$emit('dataType', this.dataType);
         // console.log(response.data)
       })
     }
