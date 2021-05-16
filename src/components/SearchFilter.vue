@@ -7,8 +7,6 @@
         label="ช่วงเวลา"
       ></base-select>
     </div>
-    111
-    {{ saleStatus }}
     <div class="w-1/3 px-2 py-3">
       <base-select v-model="dataType" label="ประเภทข้อมูล"></base-select>
     </div>
