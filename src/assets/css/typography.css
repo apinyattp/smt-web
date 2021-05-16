@@ -17,6 +17,10 @@
     src: url('../fonts/Anuphan/Anuphan-Bold.otf');
   }
 
+  pre {
+    font-family: 'Anuphan' !important;
+  }
+
   h1,
   h2,
   h3,

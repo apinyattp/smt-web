@@ -28,14 +28,21 @@
       </div>
     </div>
   </div>
+  <search-filter></search-filter>
   <h5 class="text-gold-300 mb-6">Listing</h5>
-  <div class="space-y-6">
+  <div class="relative space-y-6">
     <card v-for="n in 5" :key="n"></card>
   </div>
 </template>
 
 <script>
-export default {}
+import SearchFilter from '@/components/SearchFilter.vue'
+
+export default {
+  components: {
+    SearchFilter
+  }
+}
 </script>
 
 <style lang="scss" scoped>

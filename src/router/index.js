@@ -7,10 +7,62 @@ const routes = [
     redirect: { name: 'listing' }
   },
   {
+    path: '/login',
+    name: 'login',
+    meta: {
+      layout: 'blank'
+    },
+    component: () =>
+      import(/* webpackChunkName: "login" */ '../views/Login.vue')
+  },
+  {
+    path: '/contact',
+    name: 'contact',
+    meta: {
+      layout: 'blank'
+    },
+    component: () =>
+      import(/* webpackChunkName: "contact" */ '../views/Contact.vue')
+  },
+  {
     path: '/listing',
     name: 'listing',
     component: () =>
-      import(/* webpackChunkName: "listing" */ '../views/Listing.vue')
+      import(/* webpackChunkName: "listing" */ '../views/Listing/Index.vue')
+  },
+  {
+    path: '/listing/create',
+    name: 'listing-create',
+    meta: {
+      layout: 'blank'
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "listing-create" */ '../views/Listing/CreateEdit.vue'
+      )
+  },
+  {
+    path: '/listing/:id/edit',
+    name: 'listing-edit',
+    meta: {
+      layout: 'blank'
+    },
+    props: {
+      isEdit: true
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "listing-create" */ '../views/Listing/CreateEdit.vue'
+      )
+  },
+  {
+    path: '/listing/:id/detail',
+    name: 'listing-detail',
+    meta: {
+      layout: 'blank'
+    },
+    component: () =>
+      import(/* webpackChunkName: "detail" */ '../views/Detail.vue')
   },
   {
     path: '/saved-list',

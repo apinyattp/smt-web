@@ -5,9 +5,7 @@
     <div class="w-1/5 flex-shrink-0 p-5 bg-gray-600 bg-opacity-60 h-full">
       <div class="flex flex-col h-full">
         <div>
-          <div>
-            <img src="/img/brands/kaidee.svg" alt="Kaidee Logo" />
-          </div>
+          <img class="mx-auto" src="/img/brands/kaidee.svg" alt="Kaidee Logo" />
           <div
             class="flex items-center justify-center space-x-2 text-gray-200 w-full -mt-3"
           >
@@ -24,10 +22,29 @@
         </div>
       </div>
     </div>
-    <div class="flex-grow p-8 h-full">
-      <pre class="content text-gold-300 font-medium leading-7">{{
-        getContent()
-      }}</pre>
+    <div class="flex flex-col flex-grow p-8 h-full">
+      <div class="content relative overflow-hidden">
+        <pre
+          class="text-gold-300 font-medium leading-7 line-clamp-10 whitespace-pre-line pr-16"
+          >{{ getContent() }}</pre
+        >
+        <div class="absolute right-0 top-0">
+          <span class="text-sm text-gray-300">2 เม.ย. 64</span>
+        </div>
+      </div>
+      <div class="flex -mx-3 text-gold-500 font-bold justify-end mt-auto">
+        <router-link
+          class="flex items-center px-3"
+          :to="{ name: 'listing-detail', params: { id: 1 } }"
+        >
+          <vue-feather type="eye" stroke-width="1"></vue-feather>
+          <span class="ml-2">More details</span>
+        </router-link>
+        <div class="flex items-center px-3">
+          <vue-feather type="plus-square" stroke-width="1"></vue-feather>
+          <span class="ml-2">Add to my listing</span>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -36,6 +53,7 @@
 import getContent from '@/assets/mock/data'
 
 export default {
+  name: 'Card',
   computed: {
     getContent() {
       return getContent
@@ -45,11 +63,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-pre.content {
+.content pre {
   font-family: 'Anuphan' !important;
-}
-
-.text-green {
-  color: #34c759;
 }
 </style>

@@ -1,0 +1,20 @@
+@import '~sweetalert2/src/variables';
+
+$swal2-background: #403E3E;
+$swal2-font: 'Anuphan';
+$swal2-close-button-font-family: 'Anuphan';
+$swal2-title-color: #B6A68F;
+$swal2-title-font-size: 1.125em;
+$swal2-icon-size: 2rem;
+$swal2-icon-font-size: 2rem;
+$swal2-icon-border-color: #B6A68F;
+$swal2-info: #B6A68F;
+
+$swal2-confirm-button-color: #938063;
+
+@import '~sweetalert2/src/sweetalert2';
+
+.swal2-popup.swal2-modal {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
