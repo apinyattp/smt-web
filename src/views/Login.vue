@@ -57,7 +57,7 @@ export default {
         token: token,
         type: type
       }).then((response) => {
-        this.$store.commit('setLoginUser', {token: response.data.token})
+        this.$store.commit('setLoginUser', response.data)
         router.push('/listing')
       })
     }
