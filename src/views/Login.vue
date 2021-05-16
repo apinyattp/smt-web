@@ -37,11 +37,6 @@ export default {
     initFbsdk()
   },
   methods: {
-    // getUserData() {
-    //   window.FB.api('/me', { fields: 'id,name,email' }, (FacebookUser) => {
-    //     this.checkUser(FacebookUser.email, 'facebook')
-    //   })
-    // },
     onFacebookLogin() {
       window.FB.login((FacebookUser) => {
         console.log(FacebookUser)
