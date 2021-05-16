@@ -39,7 +39,6 @@ export default {
   methods: {
     onFacebookLogin() {
       window.FB.login((FacebookUser) => {
-        console.log(FacebookUser)
         this.checkUser(FacebookUser.authResponse.accessToken, 'facebook')
       }, this.params)
     },
@@ -58,7 +57,7 @@ export default {
         token: token,
         type: type
       }).then((response) => {
-        this.$store.commit('setLoginUser', {token: response.data.token})
+        this.$store.commit('setLoginUser', response.data)
         router.push('/listing')
       })
     }
