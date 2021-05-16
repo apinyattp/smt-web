@@ -11,11 +11,14 @@
         <div class="flex flex-col space-y-6 mt-14">
           <button
             class="btn-primary py-4 rounded-full"
-            @click="onFacebookLogin"
+            @click.prevent="onFacebookLogin"
           >
             Log in with Facebook
           </button>
-          <button class="btn-primary py-4 rounded-full" @click="onGoogleLogin">
+          <button
+            class="btn-primary py-4 rounded-full"
+            @click.prevent="onGoogleLogin"
+          >
             Log in with Google
           </button>
         </div>
@@ -25,10 +28,45 @@
 </template>
 
 <script>
+import { initFbsdk } from '@/config/facebook_oAuth.js'
+import router from '@/router'
+import { HTTP } from '@/config/axios.js'
 export default {
+  name: 'SocialLogin',
+  mounted() {
+    initFbsdk()
+  },
   methods: {
-    onFacebookLogin() {},
-    onGoogleLogin() {}
+    // getUserData() {
+    //   window.FB.api('/me', { fields: 'id,name,email' }, (FacebookUser) => {
+    //     this.checkUser(FacebookUser.email, 'facebook')
+    //   })
+    // },
+    onFacebookLogin() {
+      window.FB.login((FacebookUser) => {
+        console.log(FacebookUser)
+        this.checkUser(FacebookUser.authResponse.accessToken, 'facebook')
+      }, this.params)
+    },
+    onGoogleLogin() {
+      this.$gAuth
+        .signIn()
+        .then((GoogleUser) => {
+          this.checkUser(GoogleUser.getAuthResponse().id_token, '')
+        })
+        .catch((error) => {
+          console.log('error', error)
+        })
+    },
+    checkUser(token, type) {
+      HTTP.post('user/checkUser', {
+        token: token,
+        type: type
+      }).then((response) => {
+        this.$store.commit('setLoginUser', {token: response.data.token})
+        router.push('/listing')
+      })
+    }
   }
 }
 </script>
