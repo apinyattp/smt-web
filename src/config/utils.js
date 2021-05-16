@@ -16,6 +16,13 @@
     return JSON.parse(window.localStorage.getItem(name))
   }
   /**
+    * Get localStorage token
+  */
+  export const getToken = (name) => {
+    if (!name) return
+    return getStore(name).token
+  }
+  /**
    * Clear localStorage
   */
   export const removeItem = (name) => {

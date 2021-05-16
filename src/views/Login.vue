@@ -39,7 +39,6 @@ export default {
   methods: {
     onFacebookLogin() {
       window.FB.login((FacebookUser) => {
-        console.log(FacebookUser)
         this.checkUser(FacebookUser.authResponse.accessToken, 'facebook')
       }, this.params)
     },

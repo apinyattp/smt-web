@@ -5,16 +5,16 @@
     <div class="w-1/5 flex-shrink-0 p-5 bg-gray-600 bg-opacity-60 h-full">
       <div class="flex flex-col h-full">
         <div>
-          <img class="mx-auto" src="/img/brands/kaidee.svg" alt="Kaidee Logo" />
+          <img class="mx-auto p-9" :src="'/img/brands/' + itemsData.s + '.png'" alt="Kaidee Logo" />
           <div
             class="flex items-center justify-center space-x-2 text-gray-200 w-full -mt-3"
           >
             <vue-feather type="link" size="18"></vue-feather>
-            <a href="#" class="font-bold underline">Original Link</a>
+            <a :href="itemsData.u" class="font-bold underline" target="_blank">Original Link</a>
           </div>
         </div>
         <div class="mt-auto mb-8 space-y-1">
-          <div class="text-green font-bold text-lg text-center">หาเช่า</div>
+          <div class="text-green font-bold text-lg text-center">{{ filterType }}</div>
           <div class="flex text-gray-200 items-center space-x-2 justify-center">
             <vue-feather type="alert-triangle"></vue-feather>
             <a href="#" class="font-medium">แจ้งผิดประเภท</a>
@@ -26,16 +26,16 @@
       <div class="content relative overflow-hidden">
         <pre
           class="text-gold-300 font-medium leading-7 line-clamp-10 whitespace-pre-line pr-16"
-          >{{ getContent() }}</pre
+          >{{ itemsData.c }}</pre
         >
         <div class="absolute right-0 top-0">
-          <span class="text-sm text-gray-300">2 เม.ย. 64</span>
+          <span class="text-sm text-gray-300">{{ convertDate }}</span>
         </div>
       </div>
       <div class="flex -mx-3 text-gold-500 font-bold justify-end mt-auto">
         <router-link
           class="flex items-center px-3"
-          :to="{ name: 'listing-detail', params: { id: 1 } }"
+          :to="{ name: 'listing-detail', params: { id: itemsData.id } }"
         >
           <vue-feather type="eye" stroke-width="1"></vue-feather>
           <span class="ml-2">More details</span>
@@ -50,15 +50,39 @@
 </template>
 
 <script>
-import getContent from '@/assets/mock/data'
+import * as moment from "moment/moment";
 
 export default {
   name: 'Card',
-  computed: {
-    getContent() {
-      return getContent
+  props: {
+    items: {
+      type: Object,
+      default: () => {}
+    },
+    key: {
+      type: String
+    },
+    type: {
+      type: String
     }
-  }
+  },
+  data() {
+    return {
+      itemsData: Object.assign({}, this.items)
+    }
+  },
+  computed: {
+    convertDate() {
+      moment.locale('th')
+      return moment(this.itemsData.dt).add(543, 'year').format('ll')
+    },
+    filterType() {
+      if(this.type == 'buy') return 'ซื้อ'
+      if(this.type == 'sell') return 'ขาย'
+      return this.type
+    }
+  },
+  methods: {}
 }
 </script>
 

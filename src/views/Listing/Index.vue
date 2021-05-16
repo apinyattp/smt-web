@@ -31,16 +31,65 @@
   <search-filter></search-filter>
   <h5 class="text-gold-300 mb-6">Listing</h5>
   <div class="relative space-y-6">
-    <card v-for="n in 5" :key="n"></card>
+    <card 
+      v-for="list in a_lists"
+      :key="list.id"
+      :items="list"
+      :type="es_type[list.t]"
+    ></card>
   </div>
 </template>
 
 <script>
 import SearchFilter from '@/components/SearchFilter.vue'
+import { HTTP } from '@/config/axios.js'
+import { getToken } from '@/config/utils.js'
 
 export default {
+  data () {
+    return {
+      a_lists: [],
+      es_type: {},
+      params: {
+        token: getToken('user'),
+        search: '',
+        user_id_list: '',
+        type: '',
+        sort: 'date_desc',
+        comeFrom: '',
+        page: 1,
+        perpage: 50,
+        highlight: '',
+        is_owner_text: '',
+        user_id: '',
+        startDate: '',
+        endDate: '',
+        is_complete: '',
+        advance_contain_word: '',
+        advance_not_contain_word: '',
+        is_check: '',
+        predict_type: '',
+        is_listing: false,
+        is_view: ''
+      }
+    }
+  },
+  mounted() {
+    this.fetchData()
+  },
   components: {
     SearchFilter
+  },
+  methods: {
+    fetchData() {
+      HTTP.get('property/highlight/getData', {
+        params: this.params
+      }).then((response) => {
+        this.a_lists = response.data.data
+        this.es_type = response.data.es_type
+        // console.log(response.data)
+      })
+    }
   }
 }
 </script>
