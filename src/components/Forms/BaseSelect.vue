@@ -54,6 +54,10 @@ export default {
       type: String,
       default: ''
     },
+    labelKey: {
+      type: String,
+      default: ''
+    },
     additionalSelectClass: {
       type: String,
       default: ''
@@ -82,7 +86,9 @@ export default {
   },
   emits: ['update:modelValue'],
   data() {
-    return {}
+    return {
+      selectedValue: {}
+    }
   },
   computed: {
     selectedLabel() {

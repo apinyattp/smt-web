@@ -34,6 +34,7 @@
     :content-owner-list="contentOwnerList"
     :content-type="es_type"
     :content-tel-list="contentTelStatusList"
+    :search-form="params"
   ></search-filter>
   <h5 class="text-gold-300 mb-6">Listing</h5>
   <div class="relative space-y-6">
