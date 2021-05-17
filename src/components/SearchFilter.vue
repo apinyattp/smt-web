@@ -1,6 +1,4 @@
 <template>
-  {{params}}
-  {{searchForm}}
   <div class="flex flex-wrap -mx-2 mb-10">
     <div class="w-1/3 px-2 py-3">
       <base-select
@@ -119,7 +117,7 @@ export default {
         dateFormat: 'Y-m-d'
       },
       date: '',
-      params: this.searchForm,
+      params: Object.assign({}, this.searchForm),
       defaultParams: this.defaultForm
     }
   },

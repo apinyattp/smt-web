@@ -10,6 +10,7 @@
         ></vue-feather>
       </div>
       <input
+        v-model="search"
         type="text"
         class="font-medium block w-full py-4 pl-14 pr-12 sm:text-sm border-gray-300 rounded-full bg-dark-700 placeholder-gold-500 focus:border-gold-300 focus:ring-0 transition-colors duration-200 ease-in-out text-gold-300"
         placeholder="Search"
@@ -61,6 +62,7 @@ export default {
   },
   data() {
     return {
+      search: '',
       a_lists: [],
       es_type: {},
       sourceList: {
@@ -113,10 +115,14 @@ export default {
     }
   },
   created() {
-    this.params = this.paramDefault
+    this.params = this.$route.query
+    this.search = this.params.search
+    if(typeof this.params.type === 'undefined') {
+      this.params = this.paramDefault
+      router.push({ path: 'listing', query: this.params})
+    }
   },
   mounted() {
-    this.params = this.$route.query
     this.fetchData()
   },
   methods: {
@@ -130,7 +136,7 @@ export default {
       })
     },
     submitForm(params) {
-      console.log(params)
+      params.search = this.search
       router.push({ path: 'listing', query: params})
     }
   }
