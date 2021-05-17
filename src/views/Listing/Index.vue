@@ -35,6 +35,8 @@
     :content-type="es_type"
     :content-tel-list="contentTelStatusList"
     :search-form="params"
+    :default-form="paramDefault"
+    @update:submitForm="submitForm"
   ></search-filter>
   <h5 class="text-gold-300 mb-6">Listing</h5>
   <div class="relative space-y-6">
@@ -48,6 +50,7 @@
 </template>
 
 <script>
+import router from '@/router'
 import SearchFilter from '@/components/SearchFilter.vue'
 import { HTTP } from '@/config/axios.js'
 import { getToken, getUserDetail } from '@/config/utils.js'
@@ -61,7 +64,7 @@ export default {
       a_lists: [],
       es_type: {},
       sourceList: {
-        not_line: 'not line'
+        'not line': 'not_line'
       },
       contentTelStatusList: {
         1: 'โทรเเล้ว',
@@ -77,8 +80,8 @@ export default {
         owner: 'owner'
       },
       userDetail: getUserDetail('user'),
-      params: {
-        token: getToken('user'),
+      params: {},
+      paramDefault: {
         search: '',
         user_id_list: '',
         type: '',
@@ -97,22 +100,38 @@ export default {
         is_check: '',
         predict_type: '',
         is_listing: false,
-        is_view: ''
+        is_view: '',
+        saleStatus: '',
+        telStatus: '',
+        token: getToken('user')
       }
     }
   },
+  watch: {
+    $route() {
+      this.fetchData()
+    }
+  },
+  created() {
+    this.params = this.paramDefault
+  },
   mounted() {
+    this.params = this.$route.query
     this.fetchData()
   },
   methods: {
     fetchData() {
       HTTP.get('property/highlight/getData', {
-        params: this.params
+        params: this.$route.query
       }).then((response) => {
         this.a_lists = response.data.data
         this.es_type = response.data.es_type
         this.sourceList = { ...this.sourceList, ...response.data.es_source }
       })
+    },
+    submitForm(params) {
+      console.log(params)
+      router.push({ path: 'listing', query: params})
     }
   }
 }

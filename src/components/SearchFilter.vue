@@ -1,4 +1,6 @@
 <template>
+  {{params}}
+  {{searchForm}}
   <div class="flex flex-wrap -mx-2 mb-10">
     <div class="w-1/3 px-2 py-3">
       <base-select
@@ -9,45 +11,58 @@
     </div>
     <div class="w-1/3 px-2 py-3">
       <base-select
-        v-model="dataType"
+        v-model="params.type"
         :options="setOption(contentType)"
         label="ประเภทข้อมูล"
+        :model-value="params.type"
+        @update:modelValue="params.type = $event"
       ></base-select>
     </div>
     <div class="w-1/3 px-2 py-3">
       <base-select
-        v-model="source"
+        v-model="params.comeFrom"
         label="แหล่งที่มา"
-        :options="setOption(sourceList)"
+        :options="setOptionSwap(sourceList)"
+        :model-value="params.comeFrom"
+        @update:modelValue="params.comeFrom = $event"
       ></base-select>
     </div>
     <div class="w-1/4 px-2 py-3">
       <base-select
-        v-model="agent"
+        v-model="params.predict_type"
         label="เจ้าของ/นายหน้า"
         :options="setOption(contentOwnerList)"
+        :model-value="params.predict_type"
+        @update:modelValue="params.predict_type = $event"
       ></base-select>
     </div>
     <div class="w-1/4 px-2 py-3">
       <base-select
-        v-model="telStatus"
+        v-model="params.telStatus"
         :options="setOption(contentTelList)"
         label="สถานะการโทร"
+        :model-value="params.telStatus"
+        @update:modelValue="params.telStatus = $event"
       ></base-select>
     </div>
     <div class="w-1/4 px-2 py-3">
       <base-select
-        v-model="saleStatus"
+        v-model="params.saleStatus"
         :options="setOption(saleStausList)"
         label="สถานะการขาย"
+        :model-value="params.sa"
+        @update:modelValue="params.saleStatus = $event"
       ></base-select>
     </div>
 
     <div class="flex w-1/4 px-2 py-3 items-end">
       <div class="flex space-x-2">
-        <button class="btn-secondary rounded py-2 px-6">ล้างข้อมูล</button>
+        <button
+          class="btn-secondary rounded py-2 px-6"
+        >ล้างข้อมูล</button>
         <button 
           class="btn-primary rounded py-2 px-6"
+          @click="searchData(params)"
         >ตกลง</button>
       </div>
     </div>
@@ -87,8 +102,13 @@ export default {
     searchForm: {
       type: Object,
       default: () => {}
+    },
+    defaultForm: {
+      type: Object,
+      default: () => {}
     }
   },
+  emits: ['update:submitForm'],
   data() {
     return {
       config: {
@@ -98,29 +118,9 @@ export default {
         altInput: true,
         dateFormat: 'Y-m-d'
       },
-      // searchForm: {
-      //   search: '',
-      //   user_id_list: '',
-      //   type: '',
-      //   sort: 'date_desc',
-      //   comeFrom: '',
-      //   perpage: 50,
-      //   page: 1,
-      //   hilight: '',
-      //   token:
-      //     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlYWFjOWI2OGVhZDY4MWE5MGNkZTM5MCIsInNhbHQiOiI0OWI2YTk4My0zYzNhLTcyMWUtZWMzNi0zZDRkZGQ3YjQzNjYiLCJpYXQiOjE2MTk5NjAxNjksImV4cCI6MTYyMDA0NjU2OX0.qcaemkVl2rhpyewveXd9Wsbug_AbQf4T6VQIXFkEnTo',
-      //   user_id: '',
-      //   startDate: '',
-      //   endDate: '',
-      //   predict_type: '',
-      //   is_listing: 1
-      // },
       date: '',
-      dataType: '',
-      source: '',
-      agent: '',
-      telStatus: '',
-      saleStatus: ''
+      params: this.searchForm,
+      defaultParams: this.defaultForm
     }
   },
   methods: {
@@ -143,18 +143,42 @@ export default {
       }
       return Object.keys(items).map((item) => {
         return {
-          label: this.convertText(items[item]),
+          label: items[item],
           value: item
+        }
+      })
+    },
+    setOptionSwap(items) {
+      if(typeof items == 'undefined') {
+        return [
+          {
+            label: 'select 1',
+            value: 0
+          },
+          {
+            label: 'select 2',
+            value: 1
+          },
+          {
+            label: 'select 3',
+            value: 3
+          }
+        ]
+      }
+      return Object.keys(items).map((item) => {
+        return {
+          value: items[item],
+          label: this.convertText(item)
         }
       })
     },
     convertText(text) {
       let convertText = ''
       switch(text) {
-        case 'fb_g':
+        case 'facebook_group':
           convertText = 'facebook group'
           break
-        case 'fb_p':
+        case 'facebook_page':
           convertText = 'facebook page'
           break
         case 'baan.kaidee':
@@ -164,6 +188,9 @@ export default {
           convertText = text
       }
       return convertText
+    },
+    searchData(query) {
+      this.$emit('update:submitForm', query)
     }
   }
 }

@@ -33,6 +33,6 @@ app
   .use(VueAxios, axios)
   .use(components)
   .use(GoogleAuth, gauthOption)
-  .use(require("moment"))
+  .use(require('moment'))
   .use(VueSweetalert2, swalOptions)
   .mount('#app')
