@@ -62,7 +62,7 @@ export default {
         sort: 'date_desc',
         comeFrom: '',
         page: 1,
-        perpage: 50,
+        perpage: 25,
         highlight: '',
         is_owner_text: '',
         user_id: '',
@@ -88,8 +88,6 @@ export default {
       }).then((response) => {
         this.a_lists = response.data.data
         this.es_type = response.data.es_type
-        this.$emit('dataType', this.dataType);
-        // console.log(response.data)
       })
     }
   }
