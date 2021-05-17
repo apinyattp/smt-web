@@ -28,7 +28,13 @@
       </div>
     </div>
   </div>
-  <search-filter></search-filter>
+  <search-filter
+    :sale-staus-list="saleStatusList"
+    :source-list="sourceList"
+    :content-owner-list="contentOwnerList"
+    :content-type="es_type"
+    :content-tel-list="contentTelStatusList"
+  ></search-filter>
   <h5 class="text-gold-300 mb-6">Listing</h5>
   <div class="relative space-y-6">
     <card
@@ -53,6 +59,22 @@ export default {
     return {
       a_lists: [],
       es_type: {},
+      sourceList: {
+        not_line: 'not line'
+      },
+      contentTelStatusList: {
+        1: 'โทรเเล้ว',
+        0: 'ยังไม่โทร'
+      },
+      saleStatusList: {
+        sold: 'ขายแล้ว',
+        avaliable: 'ว่าง',
+        cancel: 'ยกเลิก'
+      },
+      contentOwnerList: {
+        agent: 'agent',
+        owner: 'owner'
+      },
       userDetail: getUserDetail('user'),
       params: {
         token: getToken('user'),
@@ -88,6 +110,7 @@ export default {
       }).then((response) => {
         this.a_lists = response.data.data
         this.es_type = response.data.es_type
+        this.sourceList = { ...this.sourceList, ...response.data.es_source }
       })
     }
   }

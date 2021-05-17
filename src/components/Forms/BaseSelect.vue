@@ -89,7 +89,7 @@ export default {
       const selected = this.options.find(
         ({ value }) => value === this.modelValue
       )
-      return (selected && selected.label) || '-'
+      return (selected && selected.label) || 'All'
     }
   },
   methods: {

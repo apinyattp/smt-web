@@ -8,20 +8,41 @@
       ></base-select>
     </div>
     <div class="w-1/3 px-2 py-3">
-      <base-select v-model="dataType" label="ประเภทข้อมูล"></base-select>
+      <base-select
+        v-model="dataType"
+        :options="setOption(contentType)"
+        label="ประเภทข้อมูล"
+      ></base-select>
     </div>
     <div class="w-1/3 px-2 py-3">
-      <base-select v-model="source" label="แหล่งที่มา"></base-select>
+      <base-select
+        v-model="source"
+        label="แหล่งที่มา"
+        :options="setOption(sourceList)"
+      ></base-select>
     </div>
     <div class="w-1/4 px-2 py-3">
-      <base-select v-model="agent" label="เจ้าของ/นายหน้า"></base-select>
+      <base-select
+        v-model="agent"
+        label="เจ้าของ/นายหน้า"
+        :options="setOption(contentOwnerList)"
+      ></base-select>
     </div>
     <div class="w-1/4 px-2 py-3">
-      <base-select v-model="telStatus" label="สถานะการโทร"></base-select>
+      <base-select
+        v-model="telStatus"
+        :options="setOption(contentTelList)"
+        label="สถานะการโทร"
+      ></base-select>
     </div>
     <div class="w-1/4 px-2 py-3">
-      <base-select v-model="saleStatus" label="สถานะการขาย"></base-select>
+      <base-select
+        v-model="saleStatus"
+        :options="setOption(saleStausList)"
+        label="สถานะการขาย"
+      ></base-select>
     </div>
+
     <div class="flex w-1/4 px-2 py-3 items-end">
       <div class="flex space-x-2">
         <button class="btn-secondary rounded py-2 px-6">ล้างข้อมูล</button>
@@ -39,6 +60,28 @@ import BaseSelect from './Forms/BaseSelect.vue'
 export default {
   components: {
     BaseSelect
+  },
+  props: {
+    saleStausList: {
+      type: Object,
+      default: () => {}
+    },
+    contentType: {
+      type: Object,
+      default: () => {}
+    },
+    sourceList: {
+      type: Object,
+      default: () => {}
+    },
+    contentOwnerList: {
+      type: Object,
+      default: () => {}
+    },
+    contentTelList: {
+      type: Object,
+      default: () => {}
+    }
   },
   data() {
     return {
@@ -72,6 +115,33 @@ export default {
       agent: '',
       telStatus: '',
       saleStatus: ''
+    }
+  },
+  methods: {
+    setOption(items) {
+      return Object.keys(items).map((item) => {
+        return {
+          label: this.convertText(items[item]),
+          value: item
+        }
+      })
+    },
+    convertText(text) {
+      let convertText = ''
+      switch(text) {
+        case 'fb_g':
+          convertText = 'facebook group'
+          break
+        case 'fb_p':
+          convertText = 'facebook page'
+          break
+        case 'baan.kaidee':
+          convertText = 'kaidee'
+          break
+        default:
+          convertText = text
+      }
+      return convertText
     }
   }
 }
