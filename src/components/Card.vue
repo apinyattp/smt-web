@@ -1,6 +1,6 @@
 <template>
   <div class="relative">
-    <div class="absolute -right-0.5 -top-0.5">
+    <div class="absolute -right-0.5 -top-0.5" v-if="!itemsData.is_view || itemsData.is_view == 0">
       <span class="flex h-4 w-4">
         <span
           class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-300 opacity-50"
@@ -99,8 +99,7 @@ export default {
       if (this.type == 'sell') return 'ขาย'
       return this.type
     }
-  },
-  methods: {}
+  }
 }
 </script>
 

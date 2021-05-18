@@ -30,11 +30,11 @@
     </div>
   </div>
   <search-filter
-    :sale-staus-list="saleStatusList"
     :source-list="sourceList"
     :content-owner-list="contentOwnerList"
     :content-type="es_type"
-    :content-tel-list="contentTelStatusList"
+    :content-view-list="contentViewList"
+    :my-listing-list="myListingList"
     :search-form="params"
     :default-form="paramDefault"
     @update:submitForm="submitForm"
@@ -48,35 +48,47 @@
       :type="es_type[list.t]"
     ></card>
   </div>
+  <pagination
+    class="mt-10 mb-40"
+    :perPage="params.perpage"
+    :total="total"
+  ></pagination>
 </template>
 
 <script>
 import router from '@/router'
-import SearchFilter from '@/components/SearchFilter.vue'
+import SearchFilter from '@/components/SearchFilterList.vue'
+import Pagination from '@/components/Pagination.vue'
 import { HTTP } from '@/config/axios.js'
 import { getToken, getUserDetail } from '@/config/utils.js'
 
 export default {
   components: {
-    SearchFilter
+    SearchFilter,
+    Pagination
   },
   data() {
     return {
       search: '',
+      total: 0,
       a_lists: [],
       es_type: {},
       sourceList: {
         'not line': 'not_line'
       },
-      contentTelStatusList: {
-        1: 'โทรเเล้ว',
-        0: 'ยังไม่โทร'
+      contentViewList: {
+        1: 'ดูแล้ว',
+        0: 'ยังไม่ดู'
       },
-      saleStatusList: {
-        sold: 'ขายแล้ว',
-        avaliable: 'ว่าง',
-        cancel: 'ยกเลิก'
+      myListingList: {
+        1: 'My Listing',
+        0: 'Listing'
       },
+      // saleStatusList: {
+      //   sold: 'ขายแล้ว',
+      //   avaliable: 'ว่าง',
+      //   cancel: 'ยกเลิก'
+      // },
       contentOwnerList: {
         agent: 'agent',
         owner: 'owner'
@@ -101,8 +113,8 @@ export default {
         advance_not_contain_word: '',
         is_check: '',
         predict_type: '',
-        is_listing: false,
-        is_view: '',
+        is_listing: '0',
+        is_view: '0',
         saleStatus: '',
         telStatus: '',
         token: getToken('user')
@@ -133,6 +145,7 @@ export default {
         this.a_lists = response.data.data
         this.es_type = response.data.es_type
         this.sourceList = { ...this.sourceList, ...response.data.es_source }
+        this.total = response.data.total
       })
     },
     submitForm(params) {
