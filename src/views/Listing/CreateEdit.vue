@@ -19,8 +19,13 @@
       <div class="grid grid-cols-2 mb-7">
         <div class="font-medium text-gray-200 mb-2 col-span-2">แหล่งที่มา</div>
         <button
-          class="btn bg-white py-3 rounded text-gold-500 hover:bg-gray-100 active:bg-gray-200"
+          class="flex items-center justify-center btn bg-white py-3 rounded text-gold-500 hover:bg-gray-100 active:bg-gray-200"
         >
+          <vue-feather
+            stroke-width="1"
+            type="upload"
+            class="mr-2"
+          ></vue-feather>
           อัพโหลดไฟล์
         </button>
       </div>
@@ -30,7 +35,7 @@
           <h3 class="text-gold-400 col-span-2">ข้อมูลที่พักอาศัย</h3>
           <div>
             <div class="font-medium text-gray-200 mb-2">ชื่อโครงการ</div>
-            <input type="text" class="input-primary" />
+            <input v-model="form.name" type="text" class="input-primary" />
           </div>
           <div class="flex flex-col">
             <div class="font-medium text-gray-200 mb-2">ประเภทการซื้อขาย</div>
@@ -39,7 +44,11 @@
           <div>
             <div class="font-medium text-gray-200 mb-2">ราคา</div>
             <div class="relative">
-              <input type="text" class="input-primary pr-16" />
+              <input
+                v-model="form.price"
+                type="text"
+                class="input-primary pr-16"
+              />
               <div
                 class="absolute top-1/2 right-4 transform -translate-y-1/2 font-medium text-gray-300"
               >
@@ -49,12 +58,16 @@
           </div>
           <div>
             <div class="font-medium text-gray-200 mb-2">ย่าน</div>
-            <input type="text" class="input-primary" />
+            <input v-model="form.location" type="text" class="input-primary" />
           </div>
           <div>
             <div class="font-medium text-gray-200 mb-2">ขนาดห้อง</div>
             <div class="relative">
-              <input type="text" class="input-primary pr-16" />
+              <input
+                v-model="form.size"
+                type="text"
+                class="input-primary pr-16"
+              />
               <div
                 class="absolute top-1/2 right-4 transform -translate-y-1/2 font-medium text-gray-300"
               >
@@ -64,42 +77,47 @@
           </div>
           <div>
             <div class="font-medium text-gray-200 mb-2">ประเภทห้อง</div>
-            <input type="text" class="input-primary" />
+            <input v-model="form.roomType" type="text" class="input-primary" />
           </div>
           <div>
             <div class="font-medium text-gray-200 mb-2">MRT/BTS</div>
-            <input type="text" class="input-primary" />
+            <input v-model="form.subway" type="text" class="input-primary" />
           </div>
           <div>
             <div class="font-medium text-gray-200 mb-2">แผนที่</div>
-            <input type="text" class="input-primary" />
+            <input v-model="form.map" type="text" class="input-primary" />
           </div>
           <div class="col-span-2">
             <div class="font-medium text-gray-200 mb-2">รายละเอียด</div>
-            <textarea type="text" class="input-primary" rows="13" />
+            <textarea
+              v-model="form.description"
+              type="text"
+              class="input-primary"
+              rows="13"
+            />
           </div>
           <div class="col-span-2">
             <div class="font-medium text-gray-200 mb-2">Original Link</div>
-            <input type="text" class="input-primary" />
+            <input v-model="form.original" type="text" class="input-primary" />
           </div>
         </div>
         <div class="grid grid-cols-2 gap-y-8 gap-x-10">
           <h3 class="text-gold-400 col-span-2">ผู้ติดต่อ</h3>
           <div>
             <div class="font-medium text-gray-200 mb-2">ชื่อผู้ติดต่อ</div>
-            <input type="text" class="input-primary" />
+            <input v-model="form.author" type="text" class="input-primary" />
           </div>
           <div>
             <div class="font-medium text-gray-200 mb-2">เบอร์โทรศัพท์</div>
-            <input type="text" class="input-primary" />
+            <input v-model="form.tel" type="text" class="input-primary" />
           </div>
           <div>
             <div class="font-medium text-gray-200 mb-2">อีเมล์</div>
-            <input type="text" class="input-primary" />
+            <input v-model="form.email" type="text" class="input-primary" />
           </div>
           <div>
             <div class="font-medium text-gray-200 mb-2">LINE ID</div>
-            <input type="text" class="input-primary" />
+            <input v-model="form.line" type="text" class="input-primary" />
           </div>
         </div>
         <div>
@@ -107,16 +125,18 @@
             รูปภาพ
             <span class="text-gray-200 text-base font-medium">(0/20)</span>
           </h3>
-          <div
-            class="flex flex-col items-center justify-center w-48 h-28 text-gray-200 border border-gray-400 rounded-xl add-image-bg"
-          >
-            <vue-feather
-              class="mb-1"
-              type="plus-circle"
-              stroke-width="1"
-              size="32"
-            ></vue-feather>
-            <span>เพิ่มรูป</span>
+          <div class="grid grid-cols-4">
+            <div
+              class="flex flex-col items-center justify-center w-48 h-28 text-gray-200 border border-gray-400 rounded-xl add-image-bg cursor-pointer"
+            >
+              <vue-feather
+                class="mb-1"
+                type="plus-circle"
+                stroke-width="1"
+                size="32"
+              ></vue-feather>
+              <span>เพิ่มรูป</span>
+            </div>
           </div>
         </div>
       </form>
@@ -126,23 +146,41 @@
 
 <script>
 export default {
+  data() {
+    return {
+      form: {
+        name: '',
+        dealType: '',
+        price: '',
+        location: '',
+        size: '',
+        roomType: '',
+        subway: '',
+        map: '',
+        description: '',
+        original: '',
+        contact: {}
+      }
+    }
+  },
   methods: {
-    onSave() {
-      this.$swal.fire({
+    async onSave() {
+      const { value } = await this.$swal.fire({
         icon: 'info',
         title: 'กรุณา “บันทึกข้อมูล” ก่อนออกจากหน้านี้',
         width: 426,
-        showClass: {
-          popup: 'animate__animated animate__fadeInDown'
-        },
-        hideClass: {
-          popup: 'animate__animated animate__fadeOutUp'
-        },
         confirmButtonText: 'บันทึก',
         cancelButtonText: 'ยกเลิก',
-        showCancelButton: true,
-        reverseButtons: true
+        showCancelButton: true
       })
+      if (value) {
+        try {
+          console.log('submit api with payload here')
+          this.$router.push({ name: 'listing' })
+        } catch (error) {
+          console.log(error)
+        }
+      }
     }
   }
 }
@@ -150,6 +188,13 @@ export default {
 
 <style lang="scss" scoped>
 .add-image-bg {
+  transition: all 0.2s ease-out;
   background: rgba(67, 68, 75, 0.3);
+  &:hover {
+    background: rgba(67, 68, 75, 0.2);
+  }
+  &:active {
+    background: rgba(67, 68, 75, 0.1);
+  }
 }
 </style>

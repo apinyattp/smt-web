@@ -39,8 +39,8 @@
       <span class="ml-2">สร้าง Listing ใหม่</span>
     </router-link>
   </div>
-  <div class="table-wrapper rounded-lg mb-40">
-    <table class="table-auto border-collapse w-full">
+  <div class="table-wrapper rounded-lg mb-12">
+    <table class="my-saved-list-table table-auto border-collapse w-full">
       <thead>
         <tr>
           <th>วันที่สร้าง</th>
@@ -128,23 +128,123 @@
       </tbody>
     </table>
   </div>
+
+  <pagination class="mb-40"></pagination>
+
+  <div class="flex flex-col w-80 bg-dark-600 rounded-2xl p-6 hidden">
+    <vue-feather
+      class="text-gold-300"
+      stroke-width="1"
+      size="32"
+      type="home"
+    ></vue-feather>
+    <div class="mt-4">
+      <div class="text-lg text-gold-400 font-bold">สถานะการขาย</div>
+      <div class="text-sm text-gray-200 font-medium">แก้ไขสถานะโครงการ</div>
+      <div
+        class="flex flex-col items-start space-y-4 mt-6 font-medium text-gold-200"
+      >
+        <label for="opt1" class="radio">
+          <input id="opt1" type="radio" name="rdo" class="hidden" />
+          <span class="label" /> ขายแล้ว
+        </label>
+        <label for="opt2" class="radio">
+          <input id="opt2" type="radio" name="rdo" class="hidden" />
+          <span class="label" /> ว่าง
+        </label>
+        <label for="opt3" class="radio">
+          <input id="opt3" type="radio" name="rdo" class="hidden" />
+          <span class="label" /> ยกเลิก
+        </label>
+      </div>
+      <div class="grid grid-cols-2 gap-x-2 mt-8">
+        <button class="btn rounded btn-primary py-3">ยกเลิก</button>
+        <button class="btn rounded bg-white text-gold-400 py-3">ยืนยัน</button>
+      </div>
+    </div>
+  </div>
+  <div class="flex flex-col w-80 bg-dark-600 rounded-2xl p-6 hidden">
+    <vue-feather
+      class="text-gold-300"
+      stroke-width="1"
+      size="32"
+      type="calendar"
+    ></vue-feather>
+    <div class="mt-4">
+      <div class="text-lg text-gold-400 font-bold">นัดหมายการติดตาม</div>
+      <div class="text-sm text-gray-200 font-medium">
+        เลือกวันเวลาที่สะดวกติดตาม
+      </div>
+      <div class="flex flex-col space-y-2 mt-4 font-medium text-gold-200">
+        <base-select></base-select>
+      </div>
+      <div class="grid grid-cols-2 gap-x-2 mt-8">
+        <button class="btn rounded btn-primary py-3">ยกเลิก</button>
+        <button class="btn rounded bg-white text-gold-400 py-3">ยืนยัน</button>
+      </div>
+    </div>
+  </div>
+  <div class="hidden flex flex-col w-80 bg-dark-600 rounded-2xl p-6">
+    <vue-feather
+      class="text-gold-300"
+      stroke-width="1"
+      size="32"
+      type="clipboard"
+    ></vue-feather>
+    <div class="mt-4">
+      <div class="text-lg text-gold-400 font-bold">รายงาน</div>
+      <div class="text-sm text-gray-200 font-medium">
+        เลือกเหตุผลที่ต้องการให้ปรับปรุง
+      </div>
+      <div class="flex flex-col space-y-2 mt-4 font-medium text-gold-200">
+        <base-select></base-select>
+        <input
+          type="text"
+          class="font-medium block w-full py-3 pl-4 sm:text-sm border-gold-600 rounded-lg placeholder-gold-500 hover:border-gold-600 focus:border-gold-500 focus:ring-0 transition-colors duration-200 ease-in-out text-gold-300 bg-op"
+        />
+      </div>
+      <div class="grid grid-cols-2 gap-x-2 mt-8">
+        <button class="btn rounded btn-primary py-3">ยกเลิก</button>
+        <button class="btn rounded bg-white text-gold-400 py-3">ยืนยัน</button>
+      </div>
+    </div>
+  </div>
+  <!-- <call-logs-modal
+    :show="showModal"
+    something-more="hello?"
+    @close="showModal = false"
+  ></call-logs-modal> -->
 </template>
 
 <script>
 import SearchFilter from '../components/SearchFilter.vue'
 import Popover from '../components/Popover'
+import Pagination from '../components/Pagination.vue'
+// import Modal from '../components/Modal/BaseModal.vue'
 
 export default {
   components: {
     SearchFilter,
-    Popover
+    Popover,
+    Pagination
+    // Modal
   },
-  mounted() {}
+  data() {
+    return {
+      showModal: false
+    }
+  },
+  mounted() {},
+  methods: {
+    closeModal(result) {
+      this.showModal = false
+    }
+  }
 }
 </script>
 
 <style lang="scss" scoped>
-table {
+table.my-saved-list-table {
   @apply font-medium;
   thead > tr > th {
     @apply font-medium text-gold-600 py-5;
@@ -159,5 +259,15 @@ table {
 
 .table-wrapper {
   background: rgba(#232429, 0.6);
+}
+
+.bg-op {
+  background: rgba(35, 36, 41, 0.3);
+}
+
+table.call-logs-table {
+  th {
+    @apply font-medium;
+  }
 }
 </style>

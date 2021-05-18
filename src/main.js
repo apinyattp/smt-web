@@ -20,7 +20,14 @@ const gauthOption = {
 
 const swalOptions = {
   confirmButtonColor: '#ffffff',
-  cancelButtonColor: '#786A57'
+  cancelButtonColor: '#786A57',
+  showClass: {
+    popup: 'animate__animated animate__fadeInDown'
+  },
+  hideClass: {
+    popup: 'animate__animated animate__fadeOutUp'
+  },
+  reverseButtons: true
 }
 
 const app = createApp(App)

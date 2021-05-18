@@ -55,13 +55,13 @@
 
     <div class="flex w-1/4 px-2 py-3 items-end">
       <div class="flex space-x-2">
+        <button class="btn-secondary rounded py-2 px-6">ล้างข้อมูล</button>
         <button
-          class="btn-secondary rounded py-2 px-6"
-        >ล้างข้อมูล</button>
-        <button 
           class="btn-primary rounded py-2 px-6"
           @click="searchData(params)"
-        >ตกลง</button>
+        >
+          ตกลง
+        </button>
       </div>
     </div>
   </div>
@@ -123,7 +123,7 @@ export default {
   },
   methods: {
     setOption(items) {
-      if(typeof items == 'undefined') {
+      if (typeof items == 'undefined') {
         return [
           {
             label: 'select 1',
@@ -147,7 +147,7 @@ export default {
       })
     },
     setOptionSwap(items) {
-      if(typeof items == 'undefined') {
+      if (typeof items == 'undefined') {
         return [
           {
             label: 'select 1',
@@ -172,7 +172,7 @@ export default {
     },
     convertText(text) {
       let convertText = ''
-      switch(text) {
+      switch (text) {
         case 'facebook_group':
           convertText = 'facebook group'
           break

@@ -12,5 +12,6 @@ module.exports = {
     "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
     'vue/html-closing-bracket-newline': 'off',
     'vue/html-self-closing': 'off',
+    'no-unused-vars': 'off'
   },
 };
