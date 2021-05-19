@@ -8,7 +8,7 @@
           >Back</router-link
         >
         <h4 class="text-gray-200 mt-3">
-          {{ result.c ? result.c.slice(0, 190) + '...' : ''}}
+          {{ slideTitle }}
         </h4>
       </div>
       <a class="flex items-center flex-initial text-gold-500" :href="result.u" target="_blank">
@@ -192,6 +192,9 @@ export default {
       if(this.result.s != 'baan.kaidee') return 'd'
       let a_images = typeof this.result.d !== 'undefined' ? JSON.parse(this.result.d) : []
       return a_images.ad.images
+    },
+    slideTitle() {
+      return this.result.c ? this.result.c.slice(0, 100) + '...' : ''
     }
   },
   methods: {
