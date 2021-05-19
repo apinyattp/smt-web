@@ -93,7 +93,7 @@ export default {
     },
     pageRange: {
       type: Number,
-      default: 4
+      default: 3
     }
   },
   data() {
