@@ -61,7 +61,7 @@
         >ล้างข้อมูล</button>
         <button
           class="btn-primary rounded py-2 px-6"
-          @click="searchData(params)"
+          @click="searchData"
         >
           ตกลง
         </button>
@@ -105,10 +105,17 @@ export default {
     searchForm: {
       type: Object,
       default: () => {}
-    },
-    defaultForm: {
-      type: Object,
-      default: () => {}
+    }
+  },
+  watch: {
+    searchForm: {
+      handler(to) {
+        to.page = parseInt(to.page)
+        to.perpage = parseInt(to.perpage)
+        this.params = to
+      },
+      deep: true,
+      immediate: true,
     }
   },
   emits: ['update:submitForm'],
@@ -122,8 +129,7 @@ export default {
         dateFormat: 'Y-m-d'
       },
       date: '',
-      params: Object.assign({}, this.searchForm),
-      defaultParams: this.defaultForm
+      params: this.searchForm
     }
   },
   methods: {
@@ -192,8 +198,9 @@ export default {
       }
       return convertText
     },
-    searchData(query) {
-      this.$emit('update:submitForm', query)
+    searchData() {
+      this.params.page = 1
+      this.$emit('update:submitForm', this.params)
     },
     clearData() {
       window.location='/listing'

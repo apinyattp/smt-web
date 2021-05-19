@@ -10,10 +10,11 @@
         ></vue-feather>
       </div>
       <input
-        v-model="search"
+        v-model="params.search"
         type="text"
         class="font-medium block w-full py-4 pl-14 pr-12 sm:text-sm border-gray-300 rounded-full bg-dark-700 placeholder-gold-500 focus:border-gold-300 focus:ring-0 transition-colors duration-200 ease-in-out text-gold-300"
         placeholder="Search"
+        @keyup.enter="submitForm(params)"
       />
     </div>
     <div
@@ -36,8 +37,7 @@
     :content-view-list="contentViewList"
     :my-listing-list="myListingList"
     :search-form="params"
-    :default-form="paramDefault"
-    @update:submitForm="submitForm"
+    @update:submitForm="submitForm($event)"
   ></search-filter>
   <h5 class="text-gold-300 mb-6">Listing</h5>
   <div class="relative space-y-6">
@@ -53,8 +53,8 @@
     :per-page="parseInt(params.perpage)"
     :total="parseInt(total)"
     :current="parseInt(params.page)"
-    @page-changed="params.page=$event"
-    @per-page-changed="params.perPage=$event"
+    @page-changed="changePage($event)"
+    @per-page-changed="changePerPage($event)"
   ></pagination>
 </template>
 
@@ -95,17 +95,17 @@ export default {
       //   cancel: 'ยกเลิก'
       // },
       contentOwnerList: {
+        '': 'All',
         agent: 'agent',
         owner: 'owner'
       },
       userDetail: getUserDetail('user'),
-      params: {},
-      paramDefault: {
+      params: {
         search: '',
         user_id_list: '',
-        type: '',
+        type: 'buy',
         sort: 'date_desc',
-        comeFrom: '',
+        comeFrom: 'not_line',
         page: 1,
         perpage: 25,
         highlight: '',
@@ -129,29 +129,20 @@ export default {
   watch: {
     $route() {
       this.fetchData()
-    },
-    params: {
-      handler(val){
-       this.submitForm(val)
-      },
-      deep: true
     }
   },
   created() {
-    this.params = this.$route.query
-    this.search = this.params.search
-    if(typeof this.params.type === 'undefined') {
-      this.params = this.paramDefault
-      router.push({ path: 'listing', query: this.params})
-    }
+    this.params = typeof this.$route.query != 'undefined' ? this.$route.query : this.params
+    router.push({ path: 'listing', query: this.params})
   },
   mounted() {
+    this.params = this.$route.query
     this.fetchData()
   },
   methods: {
     fetchData() {
       HTTP.get('property/highlight/getData', {
-        params: this.$route.query
+        params: this.params
       }).then((response) => {
         this.a_lists = response.data.data
         this.es_type = response.data.es_type
@@ -160,11 +151,20 @@ export default {
       })
     },
     submitForm(params) {
-      params.search = this.search
-      console.log(params.page)
-      router.push({ path: 'listing', query: params})
+      let query = this.$route.query
+      this.params = {...query, ...params}
+      this.$router.replace({ query: this.params})
+    },
+    changePage(page) {
+      this.params.page = page
+      this.submitForm(this.params)
+    },
+    changePerPage(perPage) {
+      this.params.page = 1
+      this.params.perpage = perPage
+      this.submitForm(this.params)
     }
-  }
+  },
 }
 </script>
 
