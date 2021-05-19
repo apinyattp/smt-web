@@ -50,8 +50,11 @@
   </div>
   <pagination
     class="mt-10 mb-40"
-    :perPage="params.perpage"
-    :total="total"
+    :per-page="parseInt(params.perpage)"
+    :total="parseInt(total)"
+    :current="parseInt(params.page)"
+    @page-changed="params.page=$event"
+    @per-page-changed="params.perPage=$event"
   ></pagination>
 </template>
 
@@ -59,13 +62,15 @@
 import router from '@/router'
 import SearchFilter from '@/components/SearchFilterList.vue'
 import Pagination from '@/components/Pagination.vue'
+// import Popover from '../components/Popover'
 import { HTTP } from '@/config/axios.js'
 import { getToken, getUserDetail } from '@/config/utils.js'
 
 export default {
   components: {
     SearchFilter,
-    Pagination
+    Pagination,
+    // Popover
   },
   data() {
     return {
@@ -124,6 +129,12 @@ export default {
   watch: {
     $route() {
       this.fetchData()
+    },
+    params: {
+      handler(val){
+       this.submitForm(val)
+      },
+      deep: true
     }
   },
   created() {
@@ -150,6 +161,7 @@ export default {
     },
     submitForm(params) {
       params.search = this.search
+      console.log(params.page)
       router.push({ path: 'listing', query: params})
     }
   }

@@ -6,7 +6,7 @@
         <template #default="{ isOpen, toggler, close }">
           <div class="flex flex-col items-center relative" @click="toggler">
             <button class="text-gold-400 flex items-center">
-              10
+              {{perPage}}
               <vue-feather
                 size="16"
                 class="ml-1"
@@ -35,14 +35,26 @@
         </template>
       </popover>
     </div>
+    <div class="flex space-x-4" v-if="hasFirst()">
+      <div class="cursor-pointer px-4 py-2 text-sm font-medium">...</div>
+    </div>
     <div class="flex space-x-4">
       <div
-        v-for="n in 4"
-        :key="n"
+        v-for="page in pages"
+        :key="page"
         class="cursor-pointer px-4 py-2 text-sm font-medium"
-        :class="n === 1 ? 'bg-gray-300 rounded text-gold-300' : 'text-gold-400'"
+        :class="current == page ? 'bg-gray-300 rounded text-gold-300' : 'text-gold-400'"
+        @click.prevent="changePage(page)"
       >
-        {{ n }}
+        {{ page }}
+      </div>
+      <div class="cursor-pointer px-4 py-2 text-sm font-medium" v-if="hasLast()">...</div>
+      <div
+        v-if="hasLast()"
+        class="cursor-pointer px-4 py-2 text-sm font-medium text-gold-400"
+         @click.prevent="changePage(totalPages)"
+      >
+        {{ totalPages }}
       </div>
     </div>
     <div class="flex items-center space-x-3 text-gray-200">
@@ -51,9 +63,11 @@
         <input
           type="text"
           class="font-medium block w-full pl-4 sm:text-sm border-gray-300 rounded bg-gray-500 placeholder-gold-500 hover:border-gold-600 focus:border-gold-300 focus:ring-0 transition-colors duration-200 ease-in-out text-gold-300"
+          v-model.number="input"
+          @keyup.enter="changePage(input)"
         />
       </div>
-      <vue-feather class="cursor-pointer" type="chevron-right"></vue-feather>
+      <vue-feather class="cursor-pointer" type="chevron-right" @click.prevent="changePage(input)"></vue-feather>
     </div>
   </div>
 </template>
@@ -65,28 +79,76 @@ export default {
     Popover
   },
   props: {
-    pageCount: {
+    current: {
+      type: Number,
+      default: 1
+    },
+    total: {
       type: Number,
       default: 0
     },
     perPage: {
       type: Number,
-      default: 10
+      default: 25
     },
-    total: {
+    pageRange: {
       type: Number,
-      default: 0
+      default: 4
     }
   },
   data() {
     return {
-      perpages: ['10', '15', '20']
+      perpages: ['25', '50', '100'],
+      input: ''
     }
   },
   methods: {
+    hasFirst: function () {
+      return this.rangeStart !== 1
+    },
+    hasLast: function () {
+      return this.rangeEnd < this.totalPages
+    },
+    hasPrev: function () {
+      return this.current > 1
+    },
+    hasNext: function () {
+      return this.current < this.totalPages
+    },
+    changePage: function (page) {
+      if (page > 0 && page <= this.totalPages) {
+        this.$emit('page-changed', page)
+      }
+    },
     onPerpageChange(to, close) {
-      console.log(to)
+      this.$emit('per-page-changed', to)
       close()
+    }
+  },
+  computed: {
+    pages: function () {
+      var pages = []
+      for (var i = this.rangeStart; i <= this.rangeEnd; i++) {
+        pages.push(i)
+      }
+      return pages
+    },
+    rangeStart: function () {
+      var start = this.current - this.pageRange
+      return (start > 0) ? start : 1
+    },
+    rangeEnd: function () {
+      var end = this.current + this.pageRange
+      return (end < this.totalPages) ? end : this.totalPages
+    },
+    totalPages: function () {
+      return Math.ceil(this.total / this.perPage)
+    },
+    nextPage: function () {
+      return this.current + 1
+    },
+    prevPage: function () {
+      return this.current - 1
     }
   }
 }
