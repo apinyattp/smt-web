@@ -141,7 +141,7 @@ export default {
   },
   methods: {
     fetchData() {
-      HTTP.get('property/highlight/getData', {
+      HTTP.get('api/property/highlight/getData', {
         params: this.params
       }).then((response) => {
         this.a_lists = response.data.data
