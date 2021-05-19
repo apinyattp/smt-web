@@ -1,5 +1,4 @@
 <template>
-  {{current}}
   <div class="flex justify-between items-center">
     <div class="flex text-gray-200 space-x-4">
       <div>Rows per page</div>

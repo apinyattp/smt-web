@@ -132,7 +132,7 @@ export default {
     }
   },
   created() {
-    this.params = typeof this.$route.query != 'undefined' ? this.$route.query : this.params
+    this.params = typeof this.$route.query.type != 'undefined' ? this.$route.query : this.params
     router.push({ path: 'listing', query: this.params})
   },
   mounted() {
