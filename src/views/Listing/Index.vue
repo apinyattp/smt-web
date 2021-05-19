@@ -20,7 +20,7 @@
     <div
       class="flex border border-gray-300 rounded-lg overflow-hidden items-center"
     >
-      <img src="https://placekitten.com/58/58" />
+      <img src="/img/sherman-tree.svg" class="h-10"/>
       <div class="py-2 px-3">
         <div class="font-medium text-gold-500 mb-1">{{ userDetail.name }}</div>
         <div class="text-xs text-gold-300">{{ userDetail.role }}</div>
@@ -56,13 +56,14 @@
     @page-changed="changePage($event)"
     @per-page-changed="changePerPage($event)"
   ></pagination>
+  <modal :show="true"></modal>
 </template>
 
 <script>
 import router from '@/router'
 import SearchFilter from '@/components/SearchFilterList.vue'
 import Pagination from '@/components/Pagination.vue'
-// import Popover from '../components/Popover'
+import Modal from '@/components/Modal/BaseModal.vue'
 import { HTTP } from '@/config/axios.js'
 import { getToken, getUserDetail } from '@/config/utils.js'
 
@@ -70,7 +71,7 @@ export default {
   components: {
     SearchFilter,
     Pagination,
-    // Popover
+    Modal
   },
   data() {
     return {
