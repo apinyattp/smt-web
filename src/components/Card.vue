@@ -23,7 +23,7 @@
               class="flex items-center justify-center space-x-2 text-gray-200 w-full -mt-3"
             >
               <vue-feather type="link" size="18"></vue-feather>
-              <a :href="itemsData.u" class="font-bold underline" target="_blank"
+              <a :href="itemsData.u" @click="clickDetail(itemsData.id)" class="font-bold underline" target="_blank"
                 >Original Link</a
               >
             </div>
@@ -71,6 +71,7 @@
 
 <script>
 import * as moment from 'moment/moment'
+import { HTTP } from '@/config/axios.js'
 
 export default {
   name: 'Card',
@@ -98,6 +99,11 @@ export default {
       if (this.type == 'buy') return 'ซื้อ'
       if (this.type == 'sell') return 'ขาย'
       return this.type
+    }
+  },
+  methods: {
+    clickDetail(id) {
+      this.$emit('id-changed', id)
     }
   }
 }

@@ -53,7 +53,7 @@ export default {
         })
     },
     checkUser(token, type) {
-      HTTP.post('user/checkUser', {
+      HTTP.post('api/user/checkUser', {
         token: token,
         type: type
       }).then((response) => {

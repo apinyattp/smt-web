@@ -46,6 +46,7 @@
       :key="list.id"
       :items="list"
       :type="es_type[list.t]"
+      @id-changed="viewData($event)"
     ></card>
   </div>
   <pagination
@@ -101,6 +102,7 @@ export default {
         owner: 'owner'
       },
       userDetail: getUserDetail('user'),
+      cur_member: '',
       params: {
         search: '',
         user_id_list: '',
@@ -149,6 +151,7 @@ export default {
         this.es_type = response.data.es_type
         this.sourceList = { ...this.sourceList, ...response.data.es_source }
         this.total = response.data.total
+        this.cur_member = response.data.user_id
       })
     },
     submitForm(params) {
@@ -164,7 +167,14 @@ export default {
       this.params.page = 1
       this.params.perpage = perPage
       this.submitForm(this.params)
-    }
+    },
+    viewData(id) {
+      HTTP.post('api/property/highlight/updateView', {
+          token: this.params.token,
+          id: id,
+          cur_member: this.cur_member
+      }).then((response) => {})
+    },
   },
 }
 </script>

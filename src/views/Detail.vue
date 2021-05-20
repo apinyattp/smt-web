@@ -129,6 +129,7 @@ export default {
   data() {
     return {
       userDetail: getUserDetail('user'),
+      cur_member: '',
       result: '',
       a_predict: {
         buy_phase: [],
@@ -154,6 +155,12 @@ export default {
   },
   mounted() {
     this.fetchData()
+  },
+  watch: {
+    result() {
+      this.predictData()
+      this.viewData()
+    }
   },
   computed: {
     convertDate() {
@@ -203,8 +210,15 @@ export default {
         params: this.params
       }).then((response) => {
         this.result = response.data.results.hits[0]._source
-        this.predictData()
+        this.cur_member = typeof this.result.member_view == 'undefined' ? '' : this.result.member_view
       })
+    },
+    viewData() {
+      HTTP.post('api/property/highlight/updateView', {
+        id: this.params.id,
+        token: this.params.token,
+        cur_member: this.cur_member
+      }).then((response) => {})
     },
     predictData() {
       HTTP.post('api/property/highlight/predict', {
