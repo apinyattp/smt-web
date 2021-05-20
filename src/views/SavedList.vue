@@ -15,18 +15,58 @@
         placeholder="Search"
       />
     </div>
-    <div
-      class="flex border border-gray-300 rounded-lg overflow-hidden items-center"
-    >
-      <img src="https://placekitten.com/58/58" />
-      <div class="py-2 px-3">
-        <div class="font-medium text-gold-500 mb-1">Name Surname</div>
-        <div class="text-xs text-gold-300">Admin 1</div>
-      </div>
-      <div class="px-2">
-        <vue-feather class="text-dark-500" type="chevron-down"></vue-feather>
-      </div>
-    </div>
+    <popover>
+      <template #default="{ isOpen, toggler, close }">
+        <div
+          v-click-outside="close"
+          class="flex flex-col items-center relative"
+          @click="toggler"
+        >
+          <div
+            class="flex border overflow-hidden items-center cursor-pointer transition"
+            :class="
+              isOpen
+                ? 'rounded-t-lg border-gold-400 bg-gray-600 profile-border-bottom'
+                : 'rounded-lg border-gray-300 bg-dark-700'
+            "
+          >
+            <div class="h-14 w-14">
+              <img
+                src="/img/sherman-tree.svg"
+                class="h-full w-full object-contain"
+              />
+            </div>
+            <div class="py-2 px-4">
+              <div class="font-medium text-gold-500 mb-1 w-28 truncate">
+                Name Surname
+              </div>
+              <div class="text-xs text-gold-300 capitalize">Admin</div>
+            </div>
+            <div class="px-2">
+              <vue-feather
+                class="text-dark-500"
+                type="chevron-down"
+              ></vue-feather>
+            </div>
+            <transition appear name="slide-fade" mode="out-in">
+              <div
+                v-if="isOpen"
+                class="w-full bg-gray-600 absolute top-full bg-white border border-gold-400 divide-y divide-gray-100 rounded-b-lg shadow-lg outline-none border-t-0 left-0"
+              >
+                <div class="py-1">
+                  <div
+                    class="text-gray-300 text-gold-300 flex justify-between w-full px-4 py-3 text-sm leading-5 text-left cursor-pointer font-medium hover:bg-dark-600 transition ease-in-out focus:bg-dark-500"
+                    @click.stop="onLogout(close)"
+                  >
+                    Logout
+                  </div>
+                </div>
+              </div>
+            </transition>
+          </div>
+        </div>
+      </template>
+    </popover>
   </div>
   <search-filter></search-filter>
   <div class="flex justify-between items-center mb-6">
@@ -220,6 +260,7 @@
 import SearchFilter from '../components/SearchFilter.vue'
 import Popover from '../components/Popover'
 import Pagination from '../components/Pagination.vue'
+import { clickOutside } from '../plugins/directives'
 // import Modal from '../components/Modal/BaseModal.vue'
 
 export default {
@@ -229,6 +270,7 @@ export default {
     Pagination
     // Modal
   },
+  directives: { clickOutside },
   data() {
     return {
       showModal: false
@@ -236,6 +278,11 @@ export default {
   },
   mounted() {},
   methods: {
+    onLogout(close) {
+      // this.$auth.logout()
+      console.log('logout')
+      close()
+    },
     closeModal(result) {
       this.showModal = false
     }
@@ -269,5 +316,9 @@ table.call-logs-table {
   th {
     @apply font-medium;
   }
+}
+
+.profile-border-bottom {
+  border-bottom-color: #5c544a;
 }
 </style>

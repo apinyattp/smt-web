@@ -1,6 +1,6 @@
 <template>
   <div class="flex h-screen">
-    <div class="bg-dark-500 h-full w-1/3"></div>
+    <div class="bg-dark-500 h-full w-1/3 bg-image"></div>
     <div class="flex items-center justify-center bg-gray-700 h-full w-2/3">
       <div class="w-1/3">
         <img
@@ -65,4 +65,10 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.bg-image {
+  background-image: url('/img/sherman-tree-1-4.svg');
+  background-position: left bottom;
+  background-repeat: no-repeat;
+}
+</style>

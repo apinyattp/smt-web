@@ -18,12 +18,18 @@
       />
     </div>
     <div
-      class="flex border border-gray-300 rounded-lg overflow-hidden items-center"
+      class="flex border border-gray-300 rounded-lg overflow-hidden items-center bg-dark-700"
     >
-      <img src="/img/sherman-tree.svg" class="h-10"/>
-      <div class="py-2 px-3">
-        <div class="font-medium text-gold-500 mb-1">{{ userDetail.name }}</div>
-        <div class="text-xs text-gold-300">{{ userDetail.role }}</div>
+      <div class="h-14 w-14">
+        <img src="/img/sherman-tree.svg" class="h-full w-full object-contain" />
+      </div>
+      <div class="py-2 px-4">
+        <div class="font-medium text-gold-500 mb-1 w-28 truncate">
+          {{ userDetail.name }}
+        </div>
+        <div class="text-xs text-gold-300 capitalize">
+          {{ userDetail.role }}
+        </div>
       </div>
       <div class="px-2">
         <vue-feather class="text-dark-500" type="chevron-down"></vue-feather>
@@ -89,7 +95,7 @@ export default {
       },
       myListingList: {
         0: 'Not My Listing',
-        'false': 'Listing'
+        false: 'Listing'
       },
       // saleStatusList: {
       //   sold: 'ขายแล้ว',
@@ -135,11 +141,11 @@ export default {
     }
   },
   created() {
-    this.params = typeof this.$route.query.type != 'undefined' ? this.$route.query : this.params
-    router.push({ path: 'listing', query: this.params})
+    // this.params = typeof this.$route.query.type != 'undefined' ? this.$route.query : this.params
+    // router.push({ path: 'listing', query: this.params})
   },
   mounted() {
-    this.params = this.$route.query
+    // this.params = this.$route.query
     this.fetchData()
   },
   methods: {
@@ -152,12 +158,13 @@ export default {
         this.sourceList = { ...this.sourceList, ...response.data.es_source }
         this.total = response.data.total
         this.cur_member = response.data.user_id
+        this.$router.push({ query: this.params })
       })
     },
     submitForm(params) {
       let query = this.$route.query
-      this.params = {...query, ...params}
-      this.$router.replace({ query: this.params})
+      this.params = { ...query, ...params }
+      this.$router.replace({ query: this.params })
     },
     changePage(page) {
       this.params.page = page
@@ -170,12 +177,12 @@ export default {
     },
     viewData(id) {
       HTTP.post('api/property/highlight/updateView', {
-          token: this.params.token,
-          id: id,
-          cur_member: this.cur_member
+        token: this.params.token,
+        id: id,
+        cur_member: this.cur_member
       }).then((response) => {})
-    },
-  },
+    }
+  }
 }
 </script>
 
