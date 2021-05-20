@@ -102,16 +102,32 @@
                           :to="{ name: 'listing-edit', params: { id: n } }"
                           >แก้ไขข้อมูล</router-link
                         >
-                        <div>สถานะการขาย</div>
-                        <div>นัดหมายการติดตาม</div>
-                        <div>รายงาน/ปรับปรุง</div>
+                        <div
+                          class="cursor-pointer"
+                          @click="statusModalShow = true"
+                        >
+                          สถานะการขาย
+                        </div>
+                        <div
+                          class="cursor-pointer"
+                          @click="trackingModalShow = true"
+                        >
+                          นัดหมายการติดตาม
+                        </div>
+                        <div
+                          class="cursor-pointer"
+                          @click="reportModalShow = true"
+                        >
+                          รายงาน/ปรับปรุง
+                        </div>
                       </div>
                     </transition>
                   </div>
                 </template>
               </popover>
               <button
-                class="btn rounded-full py-3 px-6 hover:bg-gray-400 active:bg-gray-500"
+                class="btn bg-gray-500 rounded-full py-3 px-6 hover:bg-gray-400 active:bg-gray-500"
+                @click="toggleCallLogsModal"
               >
                 <div class="flex items-center">
                   <span class="mr-2">ข้อมูล</span>
@@ -130,114 +146,117 @@
   </div>
 
   <pagination class="mb-40"></pagination>
-
-  <div class="flex flex-col w-80 bg-dark-600 rounded-2xl p-6 hidden">
-    <vue-feather
-      class="text-gold-300"
-      stroke-width="1"
-      size="32"
-      type="home"
-    ></vue-feather>
-    <div class="mt-4">
-      <div class="text-lg text-gold-400 font-bold">สถานะการขาย</div>
-      <div class="text-sm text-gray-200 font-medium">แก้ไขสถานะโครงการ</div>
-      <div
-        class="flex flex-col items-start space-y-4 mt-6 font-medium text-gold-200"
-      >
-        <label for="opt1" class="radio">
-          <input id="opt1" type="radio" name="rdo" class="hidden" />
-          <span class="label" /> ขายแล้ว
-        </label>
-        <label for="opt2" class="radio">
-          <input id="opt2" type="radio" name="rdo" class="hidden" />
-          <span class="label" /> ว่าง
-        </label>
-        <label for="opt3" class="radio">
-          <input id="opt3" type="radio" name="rdo" class="hidden" />
-          <span class="label" /> ยกเลิก
-        </label>
-      </div>
-      <div class="grid grid-cols-2 gap-x-2 mt-8">
-        <button class="btn rounded btn-primary py-3">ยกเลิก</button>
-        <button class="btn rounded bg-white text-gold-400 py-3">ยืนยัน</button>
-      </div>
-    </div>
-  </div>
-  <div class="flex flex-col w-80 bg-dark-600 rounded-2xl p-6 hidden">
-    <vue-feather
-      class="text-gold-300"
-      stroke-width="1"
-      size="32"
-      type="calendar"
-    ></vue-feather>
-    <div class="mt-4">
-      <div class="text-lg text-gold-400 font-bold">นัดหมายการติดตาม</div>
-      <div class="text-sm text-gray-200 font-medium">
-        เลือกวันเวลาที่สะดวกติดตาม
-      </div>
-      <div class="flex flex-col space-y-2 mt-4 font-medium text-gold-200">
-        <base-select></base-select>
-      </div>
-      <div class="grid grid-cols-2 gap-x-2 mt-8">
-        <button class="btn rounded btn-primary py-3">ยกเลิก</button>
-        <button class="btn rounded bg-white text-gold-400 py-3">ยืนยัน</button>
-      </div>
-    </div>
-  </div>
-  <div class="hidden flex flex-col w-80 bg-dark-600 rounded-2xl p-6">
-    <vue-feather
-      class="text-gold-300"
-      stroke-width="1"
-      size="32"
-      type="clipboard"
-    ></vue-feather>
-    <div class="mt-4">
-      <div class="text-lg text-gold-400 font-bold">รายงาน</div>
-      <div class="text-sm text-gray-200 font-medium">
-        เลือกเหตุผลที่ต้องการให้ปรับปรุง
-      </div>
-      <div class="flex flex-col space-y-2 mt-4 font-medium text-gold-200">
-        <base-select></base-select>
-        <input
-          type="text"
-          class="font-medium block w-full py-3 pl-4 sm:text-sm border-gold-600 rounded-lg placeholder-gold-500 hover:border-gold-600 focus:border-gold-500 focus:ring-0 transition-colors duration-200 ease-in-out text-gold-300 bg-op"
-        />
-      </div>
-      <div class="grid grid-cols-2 gap-x-2 mt-8">
-        <button class="btn rounded btn-primary py-3">ยกเลิก</button>
-        <button class="btn rounded bg-white text-gold-400 py-3">ยืนยัน</button>
-      </div>
-    </div>
-  </div>
-  <!-- <call-logs-modal
-    :show="showModal"
-    something-more="hello?"
-    @close="showModal = false"
-  ></call-logs-modal> -->
+  <status-modal
+    :show="statusModalShow"
+    @close="statusModalShow = false"
+    @submit="onSubmitStatusModal"
+  ></status-modal>
+  <tracking-modal
+    :show="trackingModalShow"
+    @close="trackingModalShow = false"
+    @submit="onSubmitTrackingModal"
+  ></tracking-modal>
+  <report-modal
+    :show="reportModalShow"
+    @close="reportModalShow = false"
+    @submit="onSubmitReportModal"
+  ></report-modal>
+  <call-logs-modal
+    :show="callLogsModalShow"
+    @close="callLogsModalShow = false"
+    @submit="onSubmitCallLogsModalForm"
+  ></call-logs-modal>
 </template>
 
 <script>
 import SearchFilter from '../components/SearchFilter.vue'
 import Popover from '../components/Popover'
 import Pagination from '../components/Pagination.vue'
-// import Modal from '../components/Modal/BaseModal.vue'
+import StatusModal from '../components/Modal/StatusModal.vue'
+import TrackingModal from '../components/Modal/TrackingModal.vue'
+import CallLogsModal from '../components/Modal/CallLogsModal.vue'
+import ReportModal from '../components/Modal/ReportModal.vue'
 
 export default {
   components: {
     SearchFilter,
     Popover,
-    Pagination
-    // Modal
+    Pagination,
+    StatusModal,
+    TrackingModal,
+    CallLogsModal,
+    ReportModal
   },
   data() {
     return {
-      showModal: false
+      statusModalShow: false,
+      trackingModalShow: false,
+      reportModalShow: false,
+      callLogsModalShow: false,
+      callLogsModalForm: {
+        contact: 'เอ',
+        tel: '089 987 0971',
+        note: '',
+        logs: [
+          {
+            date: '12 เม.ย. 64',
+            time: '	22:23:13',
+            caller: '	Admin A',
+            note: '	ไม่รับสาย'
+          }
+        ]
+      }
     }
   },
   mounted() {},
   methods: {
-    closeModal(result) {
-      this.showModal = false
+    closeCallLogsModal(result) {
+      this.callLogsModalShow = false
+    },
+    closeReportModal(result) {
+      this.reportModalShow = false
+    },
+    closeTrackingModal(result) {
+      this.trackingModalShow = false
+    },
+    closeStatusModal(result) {
+      this.statusModalShow = false
+    },
+    toggleCallLogsModal(item) {
+      // this.callLogsModalForm = item
+      this.callLogsModalShow = true
+    },
+    onSubmitCallLogsModalForm() {
+      try {
+        console.log('post axios request')
+      } catch (error) {
+        console.log(error)
+      }
+      this.closeCallLogsModal()
+    },
+    onSubmitReportModal(payload) {
+      try {
+        console.log('post axios request with payload', payload)
+      } catch (error) {
+        console.log(error)
+      }
+      this.closeReportModal()
+    },
+    onSubmitTrackingModal(payload) {
+      try {
+        console.log('post axios request with payload', payload)
+      } catch (error) {
+        console.log(error)
+      }
+      this.closeTrackingModal()
+    },
+    onSubmitStatusModal(payload) {
+      try {
+        console.log('post axios request with payload', payload)
+      } catch (error) {
+        console.log(error)
+      }
+      this.closeStatusModal()
     }
   }
 }
