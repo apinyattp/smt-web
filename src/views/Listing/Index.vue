@@ -88,8 +88,8 @@ export default {
         0: 'ยังไม่ดู'
       },
       myListingList: {
-        1: 'My Listing',
-        0: 'Listing'
+        0: 'Not My Listing',
+        'false': 'Listing'
       },
       // saleStatusList: {
       //   sold: 'ขายแล้ว',
@@ -121,7 +121,7 @@ export default {
         advance_not_contain_word: '',
         is_check: '',
         predict_type: '',
-        is_listing: '0',
+        is_listing: 'false',
         is_view: '0',
         saleStatus: '',
         telStatus: '',

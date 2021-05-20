@@ -8,7 +8,7 @@
           >Back</router-link
         >
         <h4 class="text-gray-200 mt-3">
-          {{ slideTitle }}
+          {{ a_predict['name'].length > 0 ? a_predict['name'][0] : slideTitle }}
         </h4>
       </div>
       <a class="flex items-center flex-initial text-gold-500" :href="result.u" target="_blank">
@@ -160,7 +160,7 @@ export default {
     result() {
       this.predictData()
       this.viewData()
-    }
+    },
   },
   computed: {
     convertDate() {
