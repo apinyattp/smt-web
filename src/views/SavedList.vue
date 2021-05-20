@@ -54,7 +54,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="n in 5" :key="n">
+        <tr v-for="lists in a_lists" :key="lists">
           <td>
             <div class="">12 เม.ย. 21</div>
             <div class="text-sm text-gold-500">Admin A</div>
@@ -63,10 +63,10 @@
             <div class="text-gold-200">ศุภาลัย</div>
             <div class="text-sm text-gray-200">ลาดพร้าว</div>
           </td>
-          <td class="">ให้เช่า</td>
-          <td class="text-center">คุณเอ</td>
-          <td class="text-center">12 เม.ย. 21</td>
-          <td class="text-center">ขายแล้ว</td>
+          <td class="">{{ filterType(lists.obj.t)}}</td>
+          <td class="text-center">{{!lists.obj.name ? '-' : lists.obj.name}}</td>
+          <td class="text-center">{{ convertDate(lists.a_listing.appointment) }}</td>
+          <td class="text-center">{{ convertSale(lists.a_listing.saleStatus) }}</td>
           <td class="text-center">
             <vue-feather
               class=""
@@ -221,6 +221,9 @@ import SearchFilter from '../components/SearchFilter.vue'
 import Popover from '../components/Popover'
 import Pagination from '../components/Pagination.vue'
 // import Modal from '../components/Modal/BaseModal.vue'
+import { HTTP } from '@/config/axios.js'
+import { getToken, getUserDetail } from '@/config/utils.js'
+import * as moment from 'moment/moment'
 
 export default {
   components: {
@@ -231,13 +234,87 @@ export default {
   },
   data() {
     return {
-      showModal: false
+      showModal: false,
+      search: '',
+      total: 0,
+      a_lists: [],
+      es_type: {},
+      sourceList: {
+        'not line': 'not_line'
+      },
+      saleStatusList: {
+        sold: 'ขายแล้ว',
+        avaliable: 'ว่าง',
+        cancel: 'ยกเลิก'
+      },
+      contentOwnerList: {
+        '': 'All',
+        agent: 'agent',
+        owner: 'owner'
+      },
+      userDetail: getUserDetail('user'),
+      params: {
+        search: '',
+        user_id_list: '',
+        type: 'buy',
+        sort: 'date_desc',
+        comeFrom: 'not_line',
+        page: 1,
+        perpage: 25,
+        highlight: '',
+        is_owner_text: '',
+        user_id: '',
+        startDate: '',
+        endDate: '',
+        is_complete: '',
+        advance_contain_word: '',
+        advance_not_contain_word: '',
+        is_check: '',
+        predict_type: '',
+        is_listing: '1',
+        is_view: '0',
+        saleStatus: '',
+        telStatus: '',
+        property_id: '',
+        token: getToken('user')
+      }
     }
   },
-  mounted() {},
+  mounted() {
+    this.fetchData()
+  },
+  computed: {
+  },
   methods: {
+    fetchData() {
+      HTTP.get('api/property/highlight/getDataListing', {
+        params: this.params
+      }).then((response) => {
+        this.a_lists = response.data.data
+        this.es_type = response.data.es_type
+        this.sourceList = { ...this.sourceList, ...response.data.es_source }
+        this.total = response.data.total
+      })
+    },
     closeModal(result) {
       this.showModal = false
+    },
+    convertDate(date) {
+      if(date == null || date == '') return '-'
+      moment.locale('th')
+      return moment(date).add(543, 'year').format('ll')
+    },
+    filterType(type) {
+      if(type == null || type == '') return '-'
+      if (type == 'buy') return 'ซื้อ'
+      if (type == 'sell') return 'ขาย'
+      return type
+    },
+    convertSale(type) {
+      if(type == null || type == '') return '-'
+      if (type == 'cancel') return 'ยกเลิก'
+      if (type == 'sold') return 'ขายแล้ว'
+      return 'ว่าง'
     }
   }
 }
