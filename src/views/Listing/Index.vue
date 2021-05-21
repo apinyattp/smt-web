@@ -124,9 +124,9 @@ export default {
         is_listing: 'false',
         is_view: '0',
         saleStatus: '',
-        telStatus: '',
-        token: getToken('user')
-      }
+        telStatus: ''
+      },
+      token: getToken('user')
     }
   },
   watch: {
@@ -145,7 +145,7 @@ export default {
   methods: {
     fetchData() {
       HTTP.get('api/property/highlight/getData', {
-        params: this.params
+        params: Object.assign(this.params, {token: this.token})
       }).then((response) => {
         this.a_lists = response.data.data
         this.es_type = response.data.es_type

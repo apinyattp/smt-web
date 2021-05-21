@@ -18,17 +18,25 @@
     <div
       class="flex border border-gray-300 rounded-lg overflow-hidden items-center"
     >
-      <img src="https://placekitten.com/58/58" />
+      <img src="/img/sherman-tree.svg" class="h-10"/>
       <div class="py-2 px-3">
-        <div class="font-medium text-gold-500 mb-1">Name Surname</div>
-        <div class="text-xs text-gold-300">Admin 1</div>
+        <div class="font-medium text-gold-500 mb-1">{{ userDetail.name }}</div>
+        <div class="text-xs text-gold-300">{{ userDetail.role }}</div>
       </div>
       <div class="px-2">
         <vue-feather class="text-dark-500" type="chevron-down"></vue-feather>
       </div>
     </div>
   </div>
-  <search-filter></search-filter>
+  <search-filter
+    :source-list="sourceList"
+    :content-owner-list="contentOwnerList"
+    :content-type="es_type"
+    :content-tel-list="contentTelList"
+    :sale-staus-list="saleStatusList"
+    :search-form="params"
+    @update:submitForm="submitForm($event)"
+  ></search-filter>
   <div class="flex justify-between items-center mb-6">
     <h3 class="text-gold-300">My Listing</h3>
     <router-link
@@ -49,30 +57,31 @@
           <th>เจ้าของ</th>
           <th>โทรล่าสุด</th>
           <th>สถานะการขาย</th>
-          <th>บันทึกล่าสุด</th>
+          <th>นัดหมายล่าสุด</th>
           <th></th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="lists in a_lists" :key="lists">
           <td>
-            <div class="">12 เม.ย. 21</div>
+            <div class="">{{ !lists.dt ? convertDate(lists.a_listing.created_at) : convertDate(lists.dt) }}</div>
             <div class="text-sm text-gold-500">Admin A</div>
           </td>
           <td>
-            <div class="text-gold-200">ศุภาลัย</div>
-            <div class="text-sm text-gray-200">ลาดพร้าว</div>
+            <div class="text-gold-200">{{lists.a_predict.name ? lists.a_predict.name[0] : '-'}}</div>
+            <div class="text-sm text-gray-200">{{lists.a_predict.location ? lists.a_predict.location[0] : ''}}</div>
           </td>
           <td class="">{{ filterType(lists.obj.t)}}</td>
           <td class="text-center">{{!lists.obj.name ? '-' : lists.obj.name}}</td>
-          <td class="text-center">{{ convertDate(lists.a_listing.appointment) }}</td>
+          <td class="text-center">{{ convertDate(lists.lastest_call_log) }}</td>
           <td class="text-center">{{ convertSale(lists.a_listing.saleStatus) }}</td>
           <td class="text-center">
-            <vue-feather
+            {{ convertDate(lists.a_listing.appointment) }}
+            <!-- <vue-feather
               class=""
               stroke-width="1"
               type="clipboard"
-            ></vue-feather>
+            ></vue-feather> -->
           </td>
           <td>
             <div class="flex space-x-3">
@@ -129,7 +138,14 @@
     </table>
   </div>
 
-  <pagination class="mb-40"></pagination>
+  <pagination
+    class="mt-10 mb-40"
+    :per-page="parseInt(params.perpage)"
+    :total="parseInt(total)"
+    :current="parseInt(params.page)"
+    @page-changed="changePage($event)"
+    @per-page-changed="changePerPage($event)"
+  ></pagination>
 
   <div class="flex flex-col w-80 bg-dark-600 rounded-2xl p-6 hidden">
     <vue-feather
@@ -243,9 +259,15 @@ export default {
         'not line': 'not_line'
       },
       saleStatusList: {
+        '': 'All',
         sold: 'ขายแล้ว',
         avaliable: 'ว่าง',
         cancel: 'ยกเลิก'
+      },
+      contentTelList: {
+        '': 'All',
+        0: 'ยังไม่โทร',
+        1: 'โทรแล้ว'
       },
       contentOwnerList: {
         '': 'All',
@@ -256,9 +278,9 @@ export default {
       params: {
         search: '',
         user_id_list: '',
-        type: 'buy',
+        type: '',
         sort: 'date_desc',
-        comeFrom: 'not_line',
+        comeFrom: '',
         page: 1,
         perpage: 25,
         highlight: '',
@@ -276,8 +298,8 @@ export default {
         saleStatus: '',
         telStatus: '',
         property_id: '',
-        token: getToken('user')
-      }
+      },
+      token: getToken('user')
     }
   },
   mounted() {
@@ -288,7 +310,7 @@ export default {
   methods: {
     fetchData() {
       HTTP.get('api/property/highlight/getDataListing', {
-        params: this.params
+        params: Object.assign(this.params, {token: this.token})
       }).then((response) => {
         this.a_lists = response.data.data
         this.es_type = response.data.es_type
@@ -315,7 +337,21 @@ export default {
       if (type == 'cancel') return 'ยกเลิก'
       if (type == 'sold') return 'ขายแล้ว'
       return 'ว่าง'
-    }
+    },
+    submitForm(params) {
+      let query = this.$route.query
+      this.params = {...query, ...params}
+      this.$router.replace({ query: this.params})
+    },
+    changePage(page) {
+      this.params.page = page
+      this.submitForm(this.params)
+    },
+    changePerPage(perPage) {
+      this.params.page = 1
+      this.params.perpage = perPage
+      this.submitForm(this.params)
+    },
   }
 }
 </script>

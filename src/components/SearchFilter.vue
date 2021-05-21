@@ -48,7 +48,7 @@
         v-model="params.saleStatus"
         :options="setOption(saleStausList)"
         label="สถานะการขาย"
-        :model-value="params.sa"
+        :model-value="params.saleStatus"
         @update:modelValue="params.saleStatus = $event"
       ></base-select>
     </div>
@@ -187,8 +187,12 @@ export default {
       }
       return convertText
     },
-    searchData(query) {
-      this.$emit('update:submitForm', query)
+    searchData() {
+      this.params.page = 1
+      this.$emit('update:submitForm', this.params)
+    },
+    clearData() {
+      window.location='/listing'
     }
   }
 }

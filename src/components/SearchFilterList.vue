@@ -134,22 +134,6 @@ export default {
   },
   methods: {
     setOption(items) {
-      if (typeof items == 'undefined') {
-        return [
-          {
-            label: 'select 1',
-            value: 0
-          },
-          {
-            label: 'select 2',
-            value: 1
-          },
-          {
-            label: 'select 3',
-            value: 3
-          }
-        ]
-      }
       return Object.keys(items).map((item) => {
         return {
           label: items[item],
@@ -158,22 +142,6 @@ export default {
       })
     },
     setOptionSwap(items) {
-      if (typeof items == 'undefined') {
-        return [
-          {
-            label: 'select 1',
-            value: 0
-          },
-          {
-            label: 'select 2',
-            value: 1
-          },
-          {
-            label: 'select 3',
-            value: 3
-          }
-        ]
-      }
       return Object.keys(items).map((item) => {
         return {
           value: items[item],
