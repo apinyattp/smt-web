@@ -10,9 +10,11 @@
         ></vue-feather>
       </div>
       <input
+        v-model="params.search"
         type="text"
         class="font-medium block w-full py-4 pl-14 pr-12 sm:text-sm border-gray-300 rounded-full bg-dark-700 placeholder-gold-500 focus:border-gold-300 focus:ring-0 transition-colors duration-200 ease-in-out text-gold-300"
         placeholder="Search"
+        @keyup.enter="submitForm(params)"
       />
     </div>
     <popover>
@@ -234,10 +236,10 @@ import { clickOutside } from '../plugins/directives'
 import { HTTP } from '@/config/axios.js'
 import { getToken, getUserDetail } from '@/config/utils.js'
 import * as moment from 'moment/moment'
-import StatusModal from '../components/Modal/StatusModal.vue'
-import TrackingModal from '../components/Modal/TrackingModal.vue'
-import CallLogsModal from '../components/Modal/CallLogsModal.vue'
-import ReportModal from '../components/Modal/ReportModal.vue'
+import StatusModal from '@/components/Modal/StatusModal.vue'
+import TrackingModal from '@/components/Modal/TrackingModal.vue'
+import CallLogsModal from '@/components/Modal/CallLogsModal.vue'
+import ReportModal from '@/components/Modal/ReportModal.vue'
 
 export default {
   components: {
@@ -337,6 +339,7 @@ export default {
         this.es_type = response.data.es_type
         this.sourceList = { ...this.sourceList, ...response.data.es_source }
         this.total = response.data.total
+        this.$router.push({ query: this.params })
       })
     },
     onLogout(close) {

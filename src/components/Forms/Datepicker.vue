@@ -60,10 +60,17 @@ export default {
   data() {
     return {
       date: null,
+      dateFormat: "d/m/Y",
       config: {
+        allowInput: true,
+        mode: 'range',
         wrap: true,
         onChange: (selectedDates, dateStr, instance) => {
-          this.$emit('update:modelValue', dateStr)
+          const dateRange = {
+            start: new Date(selectedDates[0]).toLocaleDateString('en-GB'),
+            end: new Date(selectedDates[1]).toLocaleDateString('en-GB')
+          }
+          this.$emit('update:modelValue', dateRange)
         }
       },
       selectedValue: {}

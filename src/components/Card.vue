@@ -68,7 +68,7 @@
           </router-link>
           <div class="flex items-center px-3">
             <vue-feather type="plus-square" stroke-width="1"></vue-feather>
-            <span class="ml-2">Add to my listing</span>
+            <span class="ml-2" @click="onAddList()"> {{ itemsData.a_listing && itemsData.a_listing == 1 ? 'Remove' : 'Add to' }} my listing</span>
           </div>
         </div>
       </div>
@@ -111,6 +111,23 @@ export default {
   methods: {
     clickDetail(id) {
       this.$emit('id-changed', id)
+    },
+    async onAddList() {
+      const { value } = await this.$swal.fire({
+        icon: 'info',
+        title: 'กรุณา “บันทึกข้อมูล” ก่อนออกจากหน้านี้',
+        width: 426,
+        confirmButtonText: 'บันทึก',
+        cancelButtonText: 'ยกเลิก',
+        showCancelButton: true
+      })
+      if (value) {
+        try {
+          this.$emit('on-save', this.itemsData)
+        } catch (error) {
+          console.log(error)
+        }
+      }
     }
   }
 }

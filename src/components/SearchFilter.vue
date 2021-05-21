@@ -1,11 +1,13 @@
 <template>
   <div class="flex flex-wrap -mx-2 mb-10">
     <div class="w-1/3 px-2 py-3">
-      <base-select
+      <datepicker
         v-model="date"
         prefix-icon="calendar"
         label="ช่วงเวลา"
-      ></base-select>
+        :model-value="params.startDate"
+        @update:modelValue="selectDate($event)"
+      ></datepicker>
     </div>
     <div class="w-1/3 px-2 py-3">
       <base-select
@@ -69,12 +71,14 @@
 
 <script>
 import BaseSelect from './Forms/BaseSelect.vue'
+import Datepicker from './Forms/Datepicker.vue'
 // import 'flatpickr/dist/flatpickr.css'
 // import 'flatpickr/dist/themes/dark.css'
 
 export default {
   components: {
-    BaseSelect
+    BaseSelect,
+    Datepicker
   },
   props: {
     saleStausList: {
@@ -110,6 +114,7 @@ export default {
   data() {
     return {
       config: {
+        mode: "range",
         altInputClass: 'invisible',
         wrap: true, // set wrap to true only when using 'input-group'
         altFormat: 'M j, Y',
@@ -193,6 +198,12 @@ export default {
     },
     clearData() {
       window.location='/listing'
+    },
+    selectDate(dateRange) {
+      this.params.startDate = dateRange.start
+      if(dateRange.end != 'Invalid Date') {
+        this.params.endDate = dateRange.end
+      }
     }
   }
 }

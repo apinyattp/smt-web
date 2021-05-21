@@ -53,6 +53,7 @@
       :items="list"
       :type="es_type[list.t]"
       @id-changed="viewData($event)"
+      @on-save="onAddList($event)"
     ></card>
   </div>
   <pagination
@@ -67,7 +68,6 @@
 </template>
 
 <script>
-import router from '@/router'
 import SearchFilter from '@/components/SearchFilterList.vue'
 import Pagination from '@/components/Pagination.vue'
 import Modal from '@/components/Modal/BaseModal.vue'
@@ -127,12 +127,16 @@ export default {
         saleStatus: '',
         telStatus: ''
       },
-      token: getToken('user')
+      token: getToken('user'),
+      idAddList: ''
     }
   },
   watch: {
     $route() {
       this.fetchData()
+    },
+    idAddList(to) {
+      this.addToMyList(to)
     }
   },
   created() {},
@@ -168,10 +172,50 @@ export default {
     },
     viewData(id) {
       HTTP.post('api/property/highlight/updateView', {
-        token: this.params.token,
+        token: this.token,
         id: id,
         cur_member: this.cur_member
       }).then((response) => {})
+    },
+    onAddList(id) {
+      this.idAddList = id
+    },
+    setHilight(obj) {
+      if(typeof obj != 'undefined') {
+        let hl = {
+          buy_phase :  obj.html.buy_phase,
+          investment :  obj.html.investment,
+          is_owner :  obj.html.is_owner,
+          location :  obj.html.location,
+          name :  obj.html.name,
+          number_bedroom :  obj.html.number_bedroom,
+          price :  obj.html.price,
+          rent_phase :  obj.html.rent_phase,
+          rentout_phase :  obj.html.rentout_phase,
+          sell_phase :  obj.html.sell_phase,
+          sell_rentout_phase :  obj.html.sell_rentout_phase,
+          size :  obj.html.size,
+          soi :  obj.html.soi,
+          station :  obj.html.station,
+        }
+        return JSON.stringify(hl)
+      }
+      return ''
+    },
+    addToMyList(items) {
+      HTTP.post('api/property/highlight/updateFav', {
+        token: this.token,
+        id: items.id,
+        listing_content: items.c,
+        listing_hilight: this.setHilight(items.hl),
+        url: items.u,
+        type: items.t,
+        dt: items.dt,
+        postType: items.type_agent ? items.type_agent : '',
+        comeform: items.s
+      }).then((response) => {
+         window.location = "/listing"
+      })
     }
   }
 }
