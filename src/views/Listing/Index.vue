@@ -63,7 +63,7 @@
     @page-changed="changePage($event)"
     @per-page-changed="changePerPage($event)"
   ></pagination>
-  <modal :show="true"></modal>
+  <modal :show="false"></modal>
 </template>
 
 <script>
@@ -97,11 +97,6 @@ export default {
         0: 'Not My Listing',
         false: 'Listing'
       },
-      // saleStatusList: {
-      //   sold: 'ขายแล้ว',
-      //   avaliable: 'ว่าง',
-      //   cancel: 'ยกเลิก'
-      // },
       contentOwnerList: {
         '': 'All',
         agent: 'agent',
@@ -140,12 +135,8 @@ export default {
       this.fetchData()
     }
   },
-  created() {
-    // this.params = typeof this.$route.query.type != 'undefined' ? this.$route.query : this.params
-    // router.push({ path: 'listing', query: this.params})
-  },
+  created() {},
   mounted() {
-    // this.params = this.$route.query
     this.fetchData()
   },
   methods: {

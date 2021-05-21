@@ -1,12 +1,11 @@
 <template>
   <div class="flex flex-wrap -mx-2 mb-10">
     <div class="w-1/3 px-2 py-3">
-      <datepicker
+      <base-select
+        v-model="date"
         prefix-icon="calendar"
         label="ช่วงเวลา"
-        :model-value="params.startDate"
-        @update:modelValue="params.startDate = $event"
-      ></datepicker>
+      ></base-select>
     </div>
     <div class="w-1/3 px-2 py-3">
       <base-select
@@ -69,12 +68,10 @@
 
 <script>
 import BaseSelect from './Forms/BaseSelect.vue'
-import Datepicker from './Forms/Datepicker.vue'
 
 export default {
   components: {
-    BaseSelect,
-    Datepicker
+    BaseSelect
   },
   props: {
     saleStausList: {
