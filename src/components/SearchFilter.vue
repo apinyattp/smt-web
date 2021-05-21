@@ -57,7 +57,10 @@
 
     <div class="flex w-1/4 px-2 py-3 items-end">
       <div class="flex space-x-2">
-        <button class="btn-secondary rounded py-2 px-6">ล้างข้อมูล</button>
+        <button
+          class="btn-secondary rounded py-2 px-6"
+          @click="clearData"
+        >ล้างข้อมูล</button>
         <button
           class="btn-primary rounded py-2 px-6"
           @click="searchData(params)"
@@ -72,10 +75,12 @@
 <script>
 import BaseSelect from './Forms/BaseSelect.vue'
 import Datepicker from './Forms/Datepicker.vue'
+import myMixin from '@/config/common.js'
 // import 'flatpickr/dist/flatpickr.css'
 // import 'flatpickr/dist/themes/dark.css'
 
 export default {
+  mixins: [myMixin],
   components: {
     BaseSelect,
     Datepicker
@@ -127,83 +132,8 @@ export default {
     }
   },
   methods: {
-    setOption(items) {
-      if (typeof items == 'undefined') {
-        return [
-          {
-            label: 'select 1',
-            value: 0
-          },
-          {
-            label: 'select 2',
-            value: 1
-          },
-          {
-            label: 'select 3',
-            value: 3
-          }
-        ]
-      }
-      return Object.keys(items).map((item) => {
-        return {
-          label: items[item],
-          value: item
-        }
-      })
-    },
-    setOptionSwap(items) {
-      if (typeof items == 'undefined') {
-        return [
-          {
-            label: 'select 1',
-            value: 0
-          },
-          {
-            label: 'select 2',
-            value: 1
-          },
-          {
-            label: 'select 3',
-            value: 3
-          }
-        ]
-      }
-      return Object.keys(items).map((item) => {
-        return {
-          value: items[item],
-          label: this.convertText(item)
-        }
-      })
-    },
-    convertText(text) {
-      let convertText = ''
-      switch (text) {
-        case 'facebook_group':
-          convertText = 'facebook group'
-          break
-        case 'facebook_page':
-          convertText = 'facebook page'
-          break
-        case 'baan.kaidee':
-          convertText = 'kaidee'
-          break
-        default:
-          convertText = text
-      }
-      return convertText
-    },
-    searchData() {
-      this.params.page = 1
-      this.$emit('update:submitForm', this.params)
-    },
     clearData() {
-      window.location='/listing'
-    },
-    selectDate(dateRange) {
-      this.params.startDate = dateRange.start
-      if(dateRange.end != 'Invalid Date') {
-        this.params.endDate = dateRange.end
-      }
+      window.location = '/saved-list'
     }
   }
 }

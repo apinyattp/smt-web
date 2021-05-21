@@ -52,6 +52,7 @@
       :key="list.id"
       :items="list"
       :type="es_type[list.t]"
+      :user_id="user_id"
       @id-changed="viewData($event)"
       @on-save="onAddList($event)"
     ></card>
@@ -99,8 +100,8 @@ export default {
       },
       contentOwnerList: {
         '': 'All',
-        agent: 'agent',
-        owner: 'owner'
+        agent: 'เจ้าของ',
+        owner: 'นายหน้า'
       },
       userDetail: getUserDetail('user'),
       cur_member: '',
@@ -128,7 +129,8 @@ export default {
         telStatus: ''
       },
       token: getToken('user'),
-      idAddList: ''
+      idAddList: '',
+      user_id: ''
     }
   },
   watch: {
@@ -152,6 +154,7 @@ export default {
         this.es_type = response.data.es_type
         this.sourceList = { ...this.sourceList, ...response.data.es_source }
         this.total = response.data.total
+        this.user_id = response.data.user_id
         this.cur_member = response.data.user_id
         this.$router.push({ query: this.params })
       })

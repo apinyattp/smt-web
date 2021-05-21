@@ -150,7 +150,7 @@
                         class="absolute w-40 text-gold-300 bg-gray-400 shadow-xl rounded z-10 top-full mt-2 space-y-4 py-6 px-5 text-sm"
                       >
                         <router-link
-                          :to="{ name: 'listing-edit', params: { id: n } }"
+                          :to="{ name: 'listing-edit', params: { id: lists.id} }"
                           >แก้ไขข้อมูล</router-link
                         >
                         <div
@@ -274,8 +274,8 @@ export default {
       },
       contentOwnerList: {
         '': 'All',
-        agent: 'agent',
-        owner: 'owner'
+        agent: 'เจ้าของ',
+        owner: 'นายหน้า'
       },
       userDetail: getUserDetail('user'),
       params: {

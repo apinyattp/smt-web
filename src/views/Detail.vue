@@ -31,13 +31,13 @@
         <div class="font-medium text-gray-200 mb-4">โครงการ</div>
         <ul class="flex flex-col text-gold-400 font-bold leading-6 w-52">
           <li
-            class="cursor-pointer bg-gold-500 text-gold-200 py-2 px-5 rounded"
+            :class="selected == 'propertyDetail' ? 'cursor-pointer py-2 px-5 rounded bg-gold-500 text-gold-200' : 'cursor-pointer py-2 px-5 rounded'"
             @click="scrollTo('propertyDetail')"
           >
             ข้อมูลที่พักอาศัย
           </li>
           <li
-            class="cursor-pointer font-bold py-2 px-5"
+            :class="selected == 'aiPredict' ? 'cursor-pointer py-2 px-5 rounded bg-gold-500 text-gold-200' : 'cursor-pointer py-2 px-5 rounded'"
             @click="scrollTo('aiPredict')"
           >
             AI Prediction
@@ -69,7 +69,7 @@
                   :key="images"
                   class="w-1/4 px-3 py-2"
                 >
-                  <!-- <img class="w-full h-48 object-cover" :src="images.sizes.original.link" v-if="images.sizes.original" /> -->
+                  <img class="w-full h-48 object-cover" :src="images.sizes.original.link" v-if="images.sizes" />
                 </div>
               </div>
             </sub-section>
@@ -192,7 +192,8 @@ export default {
       params: {
         id: this.$route.params.id,
         token: getToken('user')
-      }
+      },
+      selected: 'propertyDetail'
     }
   },
   computed: {
@@ -287,6 +288,7 @@ export default {
     scrollTo(refName) {
       let element = this.$refs[refName]
       element.scrollIntoView({ behavior: 'smooth' })
+      this.selected = refName
     }
   }
 }

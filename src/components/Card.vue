@@ -1,7 +1,7 @@
 <template>
   <div class="relative">
     <div
-      v-if="!itemsData.is_view || itemsData.is_view == 0"
+      v-if="checkIsView()"
       class="absolute -right-0.5 -top-0.5"
     >
       <span class="flex h-4 w-4">
@@ -90,6 +90,10 @@ export default {
     type: {
       type: String,
       default: ''
+    },
+    user_id: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -109,6 +113,14 @@ export default {
     }
   },
   methods: {
+    checkIsView() {
+      if(!this.itemsData.member_view) return true
+      const spiltData = this.itemsData.member_view.split(',')
+      if(spiltData.includes(this.user_id)) {
+        return false
+      }
+      return true
+    },
     clickDetail(id) {
       this.$emit('id-changed', id)
     },

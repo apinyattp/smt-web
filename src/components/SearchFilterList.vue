@@ -71,9 +71,10 @@
 <script>
 import BaseSelect from './Forms/BaseSelect.vue'
 import Datepicker from './Forms/Datepicker.vue'
-import * as moment from 'moment/moment'
+import myMixin from '@/config/common.js'
 
 export default {
+  mixins: [myMixin],
   components: {
     BaseSelect,
     Datepicker
@@ -120,7 +121,7 @@ export default {
         dateFormat: 'Y-m-d'
       },
       date: '',
-      params: this.searchForm
+      params: this.searchForm,
     }
   },
   watch: {
@@ -135,52 +136,9 @@ export default {
     }
   },
   methods: {
-    setOption(items) {
-      return Object.keys(items).map((item) => {
-        return {
-          label: items[item],
-          value: item
-        }
-      })
-    },
-    setOptionSwap(items) {
-      return Object.keys(items).map((item) => {
-        return {
-          value: items[item],
-          label: this.convertText(item)
-        }
-      })
-    },
-    convertText(text) {
-      let convertText = ''
-      switch (text) {
-        case 'facebook_group':
-          convertText = 'facebook group'
-          break
-        case 'facebook_page':
-          convertText = 'facebook page'
-          break
-        case 'baan.kaidee':
-          convertText = 'kaidee'
-          break
-        default:
-          convertText = text
-      }
-      return convertText
-    },
-    searchData() {
-      this.params.page = 1
-      this.$emit('update:submitForm', this.params)
-    },
-    selectDate(dateRange) {
-      this.params.startDate = dateRange.start
-      if(dateRange.end != 'Invalid Date') {
-        this.params.endDate = dateRange.end
-      }
-    },
     clearData() {
       window.location = '/listing'
-    }
+    },
   }
 }
 </script>
