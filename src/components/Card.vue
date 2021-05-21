@@ -1,6 +1,9 @@
 <template>
   <div class="relative">
-    <div class="absolute -right-0.5 -top-0.5" v-if="!itemsData.is_view || itemsData.is_view == 0">
+    <div
+      v-if="!itemsData.is_view || itemsData.is_view == 0"
+      class="absolute -right-0.5 -top-0.5"
+    >
       <span class="flex h-4 w-4">
         <span
           class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-300 opacity-50"
@@ -23,7 +26,11 @@
               class="flex items-center justify-center space-x-2 text-gray-200 w-full -mt-3"
             >
               <vue-feather type="link" size="18"></vue-feather>
-              <a :href="itemsData.u" @click="clickDetail(itemsData.id)" class="font-bold underline" target="_blank"
+              <a
+                :href="itemsData.u"
+                class="font-bold underline"
+                target="_blank"
+                @click="clickDetail(itemsData.id)"
                 >Original Link</a
               >
             </div>

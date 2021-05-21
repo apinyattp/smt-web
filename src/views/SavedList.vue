@@ -15,18 +15,58 @@
         placeholder="Search"
       />
     </div>
-    <div
-      class="flex border border-gray-300 rounded-lg overflow-hidden items-center"
-    >
-      <img src="/img/sherman-tree.svg" class="h-10"/>
-      <div class="py-2 px-3">
-        <div class="font-medium text-gold-500 mb-1">{{ userDetail.name }}</div>
-        <div class="text-xs text-gold-300">{{ userDetail.role }}</div>
-      </div>
-      <div class="px-2">
-        <vue-feather class="text-dark-500" type="chevron-down"></vue-feather>
-      </div>
-    </div>
+    <popover>
+      <template #default="{ isOpen, toggler, close }">
+        <div
+          v-click-outside="close"
+          class="flex flex-col items-center relative"
+          @click="toggler"
+        >
+          <div
+            class="flex border overflow-hidden items-center cursor-pointer transition"
+            :class="
+              isOpen
+                ? 'rounded-t-lg border-gold-400 bg-gray-600 profile-border-bottom'
+                : 'rounded-lg border-gray-300 bg-dark-700'
+            "
+          >
+            <div class="h-14 w-14">
+              <img
+                src="/img/sherman-tree.svg"
+                class="h-full w-full object-contain"
+              />
+            </div>
+            <div class="py-2 px-4">
+              <div class="font-medium text-gold-500 mb-1 w-28 truncate">
+                Name Surname
+              </div>
+              <div class="text-xs text-gold-300 capitalize">Admin</div>
+            </div>
+            <div class="px-2">
+              <vue-feather
+                class="text-dark-500"
+                type="chevron-down"
+              ></vue-feather>
+            </div>
+            <transition appear name="slide-fade" mode="out-in">
+              <div
+                v-if="isOpen"
+                class="w-full bg-gray-600 absolute top-full bg-white border border-gold-400 divide-y divide-gray-100 rounded-b-lg shadow-lg outline-none border-t-0 left-0"
+              >
+                <div class="py-1">
+                  <div
+                    class="text-gray-300 text-gold-300 flex justify-between w-full px-4 py-3 text-sm leading-5 text-left cursor-pointer font-medium hover:bg-dark-600 transition ease-in-out focus:bg-dark-500"
+                    @click.stop="onLogout(close)"
+                  >
+                    Logout
+                  </div>
+                </div>
+              </div>
+            </transition>
+          </div>
+        </div>
+      </template>
+    </popover>
   </div>
   <search-filter
     :source-list="sourceList"
@@ -111,16 +151,32 @@
                           :to="{ name: 'listing-edit', params: { id: n } }"
                           >แก้ไขข้อมูล</router-link
                         >
-                        <div>สถานะการขาย</div>
-                        <div>นัดหมายการติดตาม</div>
-                        <div>รายงาน/ปรับปรุง</div>
+                        <div
+                          class="cursor-pointer"
+                          @click="statusModalShow = true"
+                        >
+                          สถานะการขาย
+                        </div>
+                        <div
+                          class="cursor-pointer"
+                          @click="trackingModalShow = true"
+                        >
+                          นัดหมายการติดตาม
+                        </div>
+                        <div
+                          class="cursor-pointer"
+                          @click="reportModalShow = true"
+                        >
+                          รายงาน/ปรับปรุง
+                        </div>
                       </div>
                     </transition>
                   </div>
                 </template>
               </popover>
               <button
-                class="btn rounded-full py-3 px-6 hover:bg-gray-400 active:bg-gray-500"
+                class="btn bg-gray-500 rounded-full py-3 px-6 hover:bg-gray-400 active:bg-gray-500"
+                @click="toggleCallLogsModal"
               >
                 <div class="flex items-center">
                   <span class="mr-2">ข้อมูล</span>
@@ -138,6 +194,7 @@
     </table>
   </div>
 
+
   <pagination
     class="mt-10 mb-40"
     :per-page="parseInt(params.perpage)"
@@ -147,110 +204,54 @@
     @per-page-changed="changePerPage($event)"
   ></pagination>
 
-  <div class="flex flex-col w-80 bg-dark-600 rounded-2xl p-6 hidden">
-    <vue-feather
-      class="text-gold-300"
-      stroke-width="1"
-      size="32"
-      type="home"
-    ></vue-feather>
-    <div class="mt-4">
-      <div class="text-lg text-gold-400 font-bold">สถานะการขาย</div>
-      <div class="text-sm text-gray-200 font-medium">แก้ไขสถานะโครงการ</div>
-      <div
-        class="flex flex-col items-start space-y-4 mt-6 font-medium text-gold-200"
-      >
-        <label for="opt1" class="radio">
-          <input id="opt1" type="radio" name="rdo" class="hidden" />
-          <span class="label" /> ขายแล้ว
-        </label>
-        <label for="opt2" class="radio">
-          <input id="opt2" type="radio" name="rdo" class="hidden" />
-          <span class="label" /> ว่าง
-        </label>
-        <label for="opt3" class="radio">
-          <input id="opt3" type="radio" name="rdo" class="hidden" />
-          <span class="label" /> ยกเลิก
-        </label>
-      </div>
-      <div class="grid grid-cols-2 gap-x-2 mt-8">
-        <button class="btn rounded btn-primary py-3">ยกเลิก</button>
-        <button class="btn rounded bg-white text-gold-400 py-3">ยืนยัน</button>
-      </div>
-    </div>
-  </div>
-  <div class="flex flex-col w-80 bg-dark-600 rounded-2xl p-6 hidden">
-    <vue-feather
-      class="text-gold-300"
-      stroke-width="1"
-      size="32"
-      type="calendar"
-    ></vue-feather>
-    <div class="mt-4">
-      <div class="text-lg text-gold-400 font-bold">นัดหมายการติดตาม</div>
-      <div class="text-sm text-gray-200 font-medium">
-        เลือกวันเวลาที่สะดวกติดตาม
-      </div>
-      <div class="flex flex-col space-y-2 mt-4 font-medium text-gold-200">
-        <base-select></base-select>
-      </div>
-      <div class="grid grid-cols-2 gap-x-2 mt-8">
-        <button class="btn rounded btn-primary py-3">ยกเลิก</button>
-        <button class="btn rounded bg-white text-gold-400 py-3">ยืนยัน</button>
-      </div>
-    </div>
-  </div>
-  <div class="hidden flex flex-col w-80 bg-dark-600 rounded-2xl p-6">
-    <vue-feather
-      class="text-gold-300"
-      stroke-width="1"
-      size="32"
-      type="clipboard"
-    ></vue-feather>
-    <div class="mt-4">
-      <div class="text-lg text-gold-400 font-bold">รายงาน</div>
-      <div class="text-sm text-gray-200 font-medium">
-        เลือกเหตุผลที่ต้องการให้ปรับปรุง
-      </div>
-      <div class="flex flex-col space-y-2 mt-4 font-medium text-gold-200">
-        <base-select></base-select>
-        <input
-          type="text"
-          class="font-medium block w-full py-3 pl-4 sm:text-sm border-gold-600 rounded-lg placeholder-gold-500 hover:border-gold-600 focus:border-gold-500 focus:ring-0 transition-colors duration-200 ease-in-out text-gold-300 bg-op"
-        />
-      </div>
-      <div class="grid grid-cols-2 gap-x-2 mt-8">
-        <button class="btn rounded btn-primary py-3">ยกเลิก</button>
-        <button class="btn rounded bg-white text-gold-400 py-3">ยืนยัน</button>
-      </div>
-    </div>
-  </div>
-  <!-- <call-logs-modal
-    :show="showModal"
-    something-more="hello?"
-    @close="showModal = false"
-  ></call-logs-modal> -->
+  <status-modal
+    :show="statusModalShow"
+    @close="statusModalShow = false"
+    @submit="onSubmitStatusModal"
+  ></status-modal>
+  <tracking-modal
+    :show="trackingModalShow"
+    @close="trackingModalShow = false"
+    @submit="onSubmitTrackingModal"
+  ></tracking-modal>
+  <report-modal
+    :show="reportModalShow"
+    @close="reportModalShow = false"
+    @submit="onSubmitReportModal"
+  ></report-modal>
+  <call-logs-modal
+    :show="callLogsModalShow"
+    @close="callLogsModalShow = false"
+    @submit="onSubmitCallLogsModalForm"
+  ></call-logs-modal>
 </template>
 
 <script>
 import SearchFilter from '../components/SearchFilter.vue'
 import Popover from '../components/Popover'
 import Pagination from '../components/Pagination.vue'
-// import Modal from '../components/Modal/BaseModal.vue'
+import { clickOutside } from '../plugins/directives'
 import { HTTP } from '@/config/axios.js'
 import { getToken, getUserDetail } from '@/config/utils.js'
 import * as moment from 'moment/moment'
+import StatusModal from '../components/Modal/StatusModal.vue'
+import TrackingModal from '../components/Modal/TrackingModal.vue'
+import CallLogsModal from '../components/Modal/CallLogsModal.vue'
+import ReportModal from '../components/Modal/ReportModal.vue'
 
 export default {
   components: {
     SearchFilter,
     Popover,
-    Pagination
-    // Modal
+    Pagination,
+    StatusModal,
+    TrackingModal,
+    CallLogsModal,
+    ReportModal
   },
+  directives: { clickOutside },
   data() {
     return {
-      showModal: false,
       search: '',
       total: 0,
       a_lists: [],
@@ -299,13 +300,28 @@ export default {
         telStatus: '',
         property_id: '',
       },
-      token: getToken('user')
+      token: getToken('user'),
+      statusModalShow: false,
+      trackingModalShow: false,
+      reportModalShow: false,
+      callLogsModalShow: false,
+      callLogsModalForm: {
+        contact: 'เอ',
+        tel: '089 987 0971',
+        note: '',
+        logs: [
+          {
+            date: '12 เม.ย. 64',
+            time: '	22:23:13',
+            caller: '	Admin A',
+            note: '	ไม่รับสาย'
+          }
+        ]
+      }
     }
   },
   mounted() {
     this.fetchData()
-  },
-  computed: {
   },
   methods: {
     fetchData() {
@@ -318,22 +334,24 @@ export default {
         this.total = response.data.total
       })
     },
-    closeModal(result) {
-      this.showModal = false
+    onLogout(close) {
+      // this.$auth.logout()
+      console.log('logout')
+      close()
     },
     convertDate(date) {
-      if(date == null || date == '') return '-'
+      if (date == null || date == '') return '-'
       moment.locale('th')
       return moment(date).add(543, 'year').format('ll')
     },
     filterType(type) {
-      if(type == null || type == '') return '-'
+      if (type == null || type == '') return '-'
       if (type == 'buy') return 'ซื้อ'
       if (type == 'sell') return 'ขาย'
       return type
     },
     convertSale(type) {
-      if(type == null || type == '') return '-'
+      if (type == null || type == '') return '-'
       if (type == 'cancel') return 'ยกเลิก'
       if (type == 'sold') return 'ขายแล้ว'
       return 'ว่าง'
@@ -352,6 +370,54 @@ export default {
       this.params.perpage = perPage
       this.submitForm(this.params)
     },
+    closeCallLogsModal(result) {
+      this.callLogsModalShow = false
+    },
+    closeReportModal(result) {
+      this.reportModalShow = false
+    },
+    closeTrackingModal(result) {
+      this.trackingModalShow = false
+    },
+    closeStatusModal(result) {
+      this.statusModalShow = false
+    },
+    toggleCallLogsModal(item) {
+      // this.callLogsModalForm = item
+      this.callLogsModalShow = true
+    },
+    onSubmitCallLogsModalForm() {
+      try {
+        console.log('post axios request')
+      } catch (error) {
+        console.log(error)
+      }
+      this.closeCallLogsModal()
+    },
+    onSubmitReportModal(payload) {
+      try {
+        console.log('post axios request with payload', payload)
+      } catch (error) {
+        console.log(error)
+      }
+      this.closeReportModal()
+    },
+    onSubmitTrackingModal(payload) {
+      try {
+        console.log('post axios request with payload', payload)
+      } catch (error) {
+        console.log(error)
+      }
+      this.closeTrackingModal()
+    },
+    onSubmitStatusModal(payload) {
+      try {
+        console.log('post axios request with payload', payload)
+      } catch (error) {
+        console.log(error)
+      }
+      this.closeStatusModal()
+    }
   }
 }
 </script>
@@ -382,5 +448,9 @@ table.call-logs-table {
   th {
     @apply font-medium;
   }
+}
+
+.profile-border-bottom {
+  border-bottom-color: #5c544a;
 }
 </style>

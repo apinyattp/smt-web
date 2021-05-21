@@ -1,11 +1,12 @@
 <template>
   <div class="flex flex-wrap -mx-2 mb-10">
     <div class="w-1/3 px-2 py-3">
-      <base-select
-        v-model="date"
+      <datepicker
         prefix-icon="calendar"
         label="ช่วงเวลา"
-      ></base-select>
+        :model-value="params.startDate"
+        @update:modelValue="params.startDate = $event"
+      ></datepicker>
     </div>
     <div class="w-1/3 px-2 py-3">
       <base-select
@@ -55,14 +56,10 @@
 
     <div class="flex w-1/4 px-2 py-3 items-end">
       <div class="flex space-x-2">
-        <button
-        class="btn-secondary rounded py-2 px-6"
-        @click="clearData"
-        >ล้างข้อมูล</button>
-        <button
-          class="btn-primary rounded py-2 px-6"
-          @click="searchData"
-        >
+        <button class="btn-secondary rounded py-2 px-6" @click="clearData">
+          ล้างข้อมูล
+        </button>
+        <button class="btn-primary rounded py-2 px-6" @click="searchData">
           ตกลง
         </button>
       </div>
@@ -72,10 +69,12 @@
 
 <script>
 import BaseSelect from './Forms/BaseSelect.vue'
+import Datepicker from './Forms/Datepicker.vue'
 
 export default {
   components: {
-    BaseSelect
+    BaseSelect,
+    Datepicker
   },
   props: {
     saleStausList: {
@@ -107,17 +106,6 @@ export default {
       default: () => {}
     }
   },
-  watch: {
-    searchForm: {
-      handler(to) {
-        to.page = parseInt(to.page)
-        to.perpage = parseInt(to.perpage)
-        this.params = to
-      },
-      deep: true,
-      immediate: true,
-    }
-  },
   emits: ['update:submitForm'],
   data() {
     return {
@@ -130,6 +118,17 @@ export default {
       },
       date: '',
       params: this.searchForm
+    }
+  },
+  watch: {
+    searchForm: {
+      handler(to) {
+        to.page = parseInt(to.page)
+        to.perpage = parseInt(to.perpage)
+        this.params = to
+      },
+      deep: true,
+      immediate: true
     }
   },
   methods: {
@@ -171,7 +170,7 @@ export default {
       this.$emit('update:submitForm', this.params)
     },
     clearData() {
-      window.location='/listing'
+      window.location = '/listing'
     }
   }
 }

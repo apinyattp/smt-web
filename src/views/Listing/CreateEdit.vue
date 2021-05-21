@@ -16,7 +16,7 @@
       </div>
     </div>
     <div class="w-1/2 pb-20 mx-auto">
-      <div class="grid grid-cols-2 mb-7">
+      <!-- <div class="grid grid-cols-2 mb-7">
         <div class="font-medium text-gray-200 mb-2 col-span-2">แหล่งที่มา</div>
         <button
           class="flex items-center justify-center btn bg-white py-3 rounded text-gold-500 hover:bg-gray-100 active:bg-gray-200"
@@ -28,7 +28,7 @@
           ></vue-feather>
           อัพโหลดไฟล์
         </button>
-      </div>
+      </div> -->
       <div class="font-medium text-gray-200 mb-2 col-span-2 mb-4">โครงการ</div>
       <form class="space-y-8">
         <div class="grid grid-cols-2 gap-y-8 gap-x-10">

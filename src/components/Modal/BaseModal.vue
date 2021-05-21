@@ -1,7 +1,12 @@
 <template>
-  <div v-if="show" v-show="false">
-    <slot />
-  </div>
+  <transition appear name="slide-fade" mode="out-in">
+    <div
+      v-if="show"
+      class="fixed top-0 left-0 right-0 bottom-0 bg-gray-700 bg-opacity-70 flex items-center justify-center"
+    >
+      <slot />
+    </div>
+  </transition>
 </template>
 
 <script>
@@ -11,33 +16,8 @@ export default {
     show: {
       type: Boolean,
       default: false
-    },
-    modalOptions: {
-      type: Object,
-      default: () => ({})
     }
   },
-  emits: ['close'],
-  watch: {
-    show: {
-      handler(val) {
-        if (val) {
-          this.$nextTick(() => {
-            this.$swal({
-              willOpen: () => {
-                console.log('open')
-              },
-              // html: this.$el.innerHTML,
-              html: '<div id="VueSweetAlert2"></div>',
-              showConfirmButton: false,
-              ...this.modalOptions
-            }).then((result) => {
-              this.$emit('close', result)
-            })
-          })
-        }
-      }
-    }
-  }
+  emits: ['close', 'submit']
 }
 </script>
