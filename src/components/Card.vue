@@ -1,9 +1,6 @@
 <template>
   <div class="relative">
-    <div
-      v-if="checkIsView()"
-      class="absolute -right-0.5 -top-0.5"
-    >
+    <div v-if="checkIsView()" class="absolute -right-0.5 -top-0.5">
       <span class="flex h-4 w-4">
         <span
           class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-300 opacity-50"
@@ -61,14 +58,28 @@
         <div class="flex -mx-3 text-gold-500 font-bold justify-end mt-auto">
           <router-link
             class="flex items-center px-3"
-            :to="{ name: 'listing-detail', params: { id: itemsData.id } }"
+            :to="{
+              name: 'listing-detail',
+              params: { id: itemsData.id },
+              query: $route.query
+            }"
           >
             <vue-feather type="eye" stroke-width="1"></vue-feather>
             <span class="ml-2">More details</span>
           </router-link>
-          <div class="flex items-center px-3">
+          <div
+            class="flex items-center px-3 cursor-pointer"
+            @click="onAddList()"
+          >
             <vue-feather type="plus-square" stroke-width="1"></vue-feather>
-            <span class="ml-2" @click="onAddList()"> {{ itemsData.a_listing && itemsData.a_listing == 1 ? 'Remove' : 'Add to' }} my listing</span>
+            <span class="ml-2">
+              {{
+                itemsData.a_listing && itemsData.a_listing == 1
+                  ? 'Remove'
+                  : 'Add to'
+              }}
+              my listing</span
+            >
           </div>
         </div>
       </div>
@@ -114,9 +125,9 @@ export default {
   },
   methods: {
     checkIsView() {
-      if(!this.itemsData.member_view) return true
+      if (!this.itemsData.member_view) return true
       const spiltData = this.itemsData.member_view.split(',')
-      if(spiltData.includes(this.user_id)) {
+      if (spiltData.includes(this.user_id)) {
         return false
       }
       return true
@@ -127,7 +138,7 @@ export default {
     async onAddList() {
       const { value } = await this.$swal.fire({
         icon: 'info',
-        title: 'กรุณา “บันทึกข้อมูล” ก่อนออกจากหน้านี้',
+        title: 'กดปุ่ม “บันทึก” เพื่อยืนยันการบันทึกข้อมูล',
         width: 426,
         confirmButtonText: 'บันทึก',
         cancelButtonText: 'ยกเลิก',

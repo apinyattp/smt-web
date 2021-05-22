@@ -1,22 +1,62 @@
 <template>
   <div class="flex justify-between items-center mb-24">
-    <div class="w-1/3 relative">
-      <div class="absolute inset-y-0 left-0 flex items-center pl-6">
-        <vue-feather
-          class="text-gold-500"
-          stroke-width="2"
-          size="18"
-          type="search"
-        ></vue-feather>
-      </div>
-      <input
-        v-model="params.search"
-        type="text"
-        class="font-medium block w-full py-4 pl-14 pr-12 sm:text-sm border-gray-300 rounded-full bg-dark-700 placeholder-gold-500 focus:border-gold-300 focus:ring-0 transition-colors duration-200 ease-in-out text-gold-300"
-        placeholder="Search"
-        @keyup.enter="submitForm(params)"
-      />
-    </div>
+    <popover>
+      <template #default="{ isOpen, open, close }">
+        <div v-click-outside="close" class="w-1/3 relative">
+          <div>
+            <div class="absolute inset-y-0 left-0 flex items-center pl-6">
+              <vue-feather
+                class="text-gold-500"
+                stroke-width="2"
+                size="18"
+                type="search"
+              ></vue-feather>
+            </div>
+            <input
+              v-model="params.search"
+              type="text"
+              class="font-medium block w-full py-4 pl-14 pr-12 sm:text-sm border-gray-300 rounded-full bg-dark-700 placeholder-gold-500 focus:border-gold-300 focus:ring-0 transition-colors duration-200 ease-in-out text-gold-300"
+              placeholder="Search"
+              @click="open"
+              @input="onSearchChange"
+              @keyup.enter="submitForm(params)"
+            />
+          </div>
+          <transition appear name="slide-fade" mode="out-in">
+            <div
+              v-if="isOpen && isSearchResultShow"
+              class="w-full bg-gray-600 absolute top-full mt-2 bg-white border border-gold-300 divide-y divide-gray-100 rounded-md shadow-lg outline-none z-10"
+            >
+              <div class="py-1 autocomplete-container">
+                <template v-if="propertyList.length">
+                  <div
+                    v-for="property in propertyList"
+                    :key="property.id"
+                    class="text-gold-300 w-full px-4 py-3 text-sm leading-5 text-left cursor-pointer font-medium hover:bg-dark-600 transition ease-in-out focus:bg-dark-500"
+                    @click="onPropertySelect(property, close)"
+                  >
+                    {{ property.property_name }}
+                  </div>
+                </template>
+                <template v-else>
+                  <div
+                    class="text-gold-300 px-4 py-3 text-sm leading-5 text-center"
+                  >
+                    <template v-if="isSearching"
+                      >searching "{{ params.search }}"</template
+                    >
+                    <template v-else-if="isSearched && !isSearching"
+                      >"{{ params.search }}" did not match any
+                      property.</template
+                    >
+                  </div>
+                </template>
+              </div>
+            </div>
+          </transition>
+        </div>
+      </template>
+    </popover>
     <popover>
       <template #default="{ isOpen, toggler, close }">
         <div
@@ -40,9 +80,11 @@
             </div>
             <div class="py-2 px-4">
               <div class="font-medium text-gold-500 mb-1 w-28 truncate">
-                Name Surname
+                {{ userDetail.name }}
               </div>
-              <div class="text-xs text-gold-300 capitalize">Admin</div>
+              <div class="text-xs text-gold-300 capitalize">
+                {{ userDetail.role }}
+              </div>
             </div>
             <div class="px-2">
               <vue-feather
@@ -104,98 +146,125 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="lists in a_lists" :key="lists">
-          <td>
-            <div class="">{{ !lists.dt ? convertDate(lists.a_listing.created_at) : convertDate(lists.dt) }}</div>
-            <div class="text-sm text-gold-500">Admin A</div>
-          </td>
-          <td>
-            <div class="text-gold-200">{{lists.a_predict.name ? lists.a_predict.name[0] : '-'}}</div>
-            <div class="text-sm text-gray-200">{{lists.a_predict.location ? lists.a_predict.location[0] : ''}}</div>
-          </td>
-          <td class="">{{ filterType(lists.obj.t)}}</td>
-          <td class="text-center">{{!lists.obj.name ? '-' : lists.obj.name}}</td>
-          <td class="text-center">{{ convertDate(lists.lastest_call_log) }}</td>
-          <td class="text-center">{{ convertSale(lists.a_listing.saleStatus) }}</td>
-          <td class="text-center">
-            {{ convertDate(lists.a_listing.appointment) }}
-            <!-- <vue-feather
+        <template v-if="a_lists.length">
+          <tr v-for="lists in a_lists" :key="lists">
+            <td>
+              <div class="">
+                {{
+                  !lists.dt
+                    ? convertDate(lists.a_listing.created_at)
+                    : convertDate(lists.dt)
+                }}
+              </div>
+              <div class="text-sm text-gold-500">Admin A</div>
+            </td>
+            <td>
+              <div class="text-gold-200">
+                {{ lists.a_predict.name ? lists.a_predict.name[0] : '-' }}
+              </div>
+              <div class="text-sm text-gray-200">
+                {{
+                  lists.a_predict.location ? lists.a_predict.location[0] : ''
+                }}
+              </div>
+            </td>
+            <td class="">{{ filterType(lists.obj.t) }}</td>
+            <td class="text-center">
+              {{ !lists.obj.name ? '-' : lists.obj.name }}
+            </td>
+            <td class="text-center">
+              {{ convertDate(lists.lastest_call_log) }}
+            </td>
+            <td class="text-center">
+              {{ convertSale(lists.a_listing.saleStatus) }}
+            </td>
+            <td class="text-center">
+              {{ convertDate(lists.a_listing.appointment) }}
+              <!-- <vue-feather
               class=""
               stroke-width="1"
               type="clipboard"
             ></vue-feather> -->
-          </td>
-          <td>
-            <div class="flex space-x-3">
-              <popover>
-                <template #default="{ isOpen, close, open }">
-                  <div class="flex flex-col items-center relative">
-                    <button
-                      class="btn bg-gray-500 rounded-full py-3 px-6 hover:bg-gray-400 active:bg-gray-500"
-                      @focusout="close"
-                      @focusin="open"
-                    >
-                      <div class="flex items-center">
-                        <span class="mr-2">จัดการ</span>
-                        <vue-feather
-                          stroke-width="1"
-                          type="chevron-down"
-                          size="20"
-                        ></vue-feather>
-                      </div>
-                    </button>
-                    <transition appear name="slide-fade" mode="out-in">
-                      <div
-                        v-if="isOpen"
-                        class="absolute w-40 text-gold-300 bg-gray-400 shadow-xl rounded z-10 top-full mt-2 space-y-4 py-6 px-5 text-sm"
+            </td>
+            <td>
+              <div class="flex space-x-3">
+                <popover>
+                  <template #default="{ isOpen, close, open }">
+                    <div class="flex flex-col items-center relative">
+                      <button
+                        class="btn bg-gray-500 rounded-full py-3 px-6 hover:bg-gray-400 active:bg-gray-500"
+                        @focusout="close"
+                        @focusin="open"
                       >
-                        <router-link
-                          :to="{ name: 'listing-edit', params: { id: lists.id} }"
-                          >แก้ไขข้อมูล</router-link
-                        >
-                        <div
-                          class="cursor-pointer"
-                          @click="statusModalShow = true"
-                        >
-                          สถานะการขาย
+                        <div class="flex items-center">
+                          <span class="mr-2">จัดการ</span>
+                          <vue-feather
+                            stroke-width="1"
+                            type="chevron-down"
+                            size="20"
+                          ></vue-feather>
                         </div>
+                      </button>
+                      <transition appear name="slide-fade" mode="out-in">
                         <div
-                          class="cursor-pointer"
-                          @click="trackingModalShow = true"
+                          v-if="isOpen"
+                          class="absolute w-40 text-gold-300 bg-gray-400 shadow-xl rounded z-10 top-full mt-2 space-y-4 py-6 px-5 text-sm"
                         >
-                          นัดหมายการติดตาม
+                          <router-link
+                            :to="{
+                              name: 'listing-edit',
+                              params: { id: lists.id }
+                            }"
+                            >แก้ไขข้อมูล</router-link
+                          >
+                          <div
+                            class="cursor-pointer"
+                            @click="statusModalShow = true"
+                          >
+                            สถานะการขาย
+                          </div>
+                          <div
+                            class="cursor-pointer"
+                            @click="trackingModalShow = true"
+                          >
+                            นัดหมายการติดตาม
+                          </div>
+                          <div
+                            class="cursor-pointer"
+                            @click="reportModalShow = true"
+                          >
+                            รายงาน/ปรับปรุง
+                          </div>
                         </div>
-                        <div
-                          class="cursor-pointer"
-                          @click="reportModalShow = true"
-                        >
-                          รายงาน/ปรับปรุง
-                        </div>
-                      </div>
-                    </transition>
+                      </transition>
+                    </div>
+                  </template>
+                </popover>
+                <button
+                  class="btn bg-gray-500 rounded-full py-3 px-6 hover:bg-gray-400 active:bg-gray-500"
+                  @click="toggleCallLogsModal"
+                >
+                  <div class="flex items-center">
+                    <span class="mr-2">ข้อมูล</span>
+                    <vue-feather
+                      stroke-width="1"
+                      type="phone"
+                      size="20"
+                    ></vue-feather>
                   </div>
-                </template>
-              </popover>
-              <button
-                class="btn bg-gray-500 rounded-full py-3 px-6 hover:bg-gray-400 active:bg-gray-500"
-                @click="toggleCallLogsModal"
-              >
-                <div class="flex items-center">
-                  <span class="mr-2">ข้อมูล</span>
-                  <vue-feather
-                    stroke-width="1"
-                    type="phone"
-                    size="20"
-                  ></vue-feather>
-                </div>
-              </button>
-            </div>
-          </td>
-        </tr>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </template>
+        <template v-else>
+          <tr>
+            <td class="text-center" colspan="8">There is no any list</td>
+          </tr>
+        </template>
       </tbody>
     </table>
   </div>
-
 
   <pagination
     class="mt-10 mb-40"
@@ -232,7 +301,7 @@
 import SearchFilter from '../components/SearchFilter.vue'
 import Popover from '../components/Popover'
 import Pagination from '../components/Pagination.vue'
-import { clickOutside } from '../plugins/directives'
+import { clickOutside } from '@/plugins/directives'
 import { HTTP } from '@/config/axios.js'
 import { getToken, getUserDetail } from '@/config/utils.js'
 import * as moment from 'moment/moment'
@@ -240,6 +309,7 @@ import StatusModal from '@/components/Modal/StatusModal.vue'
 import TrackingModal from '@/components/Modal/TrackingModal.vue'
 import CallLogsModal from '@/components/Modal/CallLogsModal.vue'
 import ReportModal from '@/components/Modal/ReportModal.vue'
+import debounce from 'lodash/debounce'
 
 export default {
   components: {
@@ -300,7 +370,7 @@ export default {
         is_view: '0',
         saleStatus: '',
         telStatus: '',
-        property_id: '',
+        property_id: ''
       },
       token: getToken('user'),
       statusModalShow: false,
@@ -319,21 +389,70 @@ export default {
             note: '	ไม่รับสาย'
           }
         ]
-      }
+      },
+      propertyList: [],
+      isSearching: false,
+      isSearched: false
+    }
+  },
+  computed: {
+    onSearchSubmit() {
+      return debounce(this.getPropertyName, 500)
+    },
+    isSearchResultShow() {
+      return this.params.search && (this.isSearched || this.isSearching)
     }
   },
   watch: {
-    $route() {
-      this.fetchData()
+    $route(to) {
+      if (to.name === 'saved-list') {
+        this.fetchData()
+      }
+    },
+    'params.search'(to) {
+      this.isSearched = false
+      this.propertyList = []
+      if (!to) this.onSearchSubmit.cancel()
     }
   },
   mounted() {
     this.fetchData()
   },
   methods: {
+    onPropertySelect({ property_name }, close) {
+      // do your action here krub p' meow
+      // can also do search for named property list here
+      this.params.search = property_name
+      close()
+    },
+    async getPropertyName() {
+      this.isSearching = true
+      const params = {
+        type: 'current',
+        search: this.params.search,
+        page: 1,
+        token: this.token
+      }
+
+      const {
+        data: { dataList }
+      } = await HTTP.get('api/property/getData', {
+        params
+      })
+
+      this.propertyList = dataList
+      this.isSearching = false
+      this.isSearched = true
+    },
+    onSearchChange(event) {
+      const { value } = event.target
+      if (value) {
+        this.onSearchSubmit(value)
+      }
+    },
     fetchData() {
       HTTP.get('api/property/highlight/getDataListing', {
-        params: Object.assign(this.params, {token: this.token})
+        params: Object.assign(this.params, { token: this.token })
       }).then((response) => {
         this.a_lists = response.data.data
         this.es_type = response.data.es_type
@@ -366,8 +485,8 @@ export default {
     },
     submitForm(params) {
       let query = this.$route.query
-      this.params = {...query, ...params}
-      this.$router.replace({ query: this.params})
+      this.params = { ...query, ...params }
+      this.$router.replace({ name: 'saved-list', query: this.params })
     },
     changePage(page) {
       this.params.page = page
@@ -460,5 +579,22 @@ table.call-logs-table {
 
 .profile-border-bottom {
   border-bottom-color: #5c544a;
+}
+
+.autocomplete-container {
+  max-height: 50vh;
+  overflow: auto;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #b6a68f;
+    border-radius: 2px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: #b6a68f;
+  }
 }
 </style>

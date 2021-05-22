@@ -4,7 +4,7 @@
       <div class="flex-grow">
         <router-link
           class="text-gold-500 font-bold underline"
-          :to="{ name: 'listing' }"
+          :to="{ name: 'listing', query: $route.query }"
           >Back</router-link
         >
         <h4 class="text-gray-200 mt-3">
