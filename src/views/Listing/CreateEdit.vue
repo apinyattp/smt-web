@@ -300,23 +300,27 @@ export default {
         token: props.token,
         content: submitData.description,
         url: submitData.original,
-        comeFrom: submitData.comeFrom,
         type: submitData.type,
         name: submitData.author,
         tel: submitData.tel,
         email: submitData.email,
         line_id: submitData.line,
-        map: submitData.map,
-        postType: submitData.post_type,
-        highlightData: {
-          a_entity: JSON.stringify(a_entity)
-        }
+        map: submitData.map
       }
 
       let urlPath = 'addDataListing'
       if(props.isEdit) {
         urlPath = 'updateListingData'
         params['id'] = route.params.id
+        params['comeform'] = submitData.comeFrom
+        params['post_type'] = submitData.post_type
+        params['highlightData'] = {
+          a_entity: JSON.stringify(a_entity)
+        }
+      }else{
+        params['a_entity'] = JSON.stringify(a_entity)
+        params['comeFrom'] = submitData.comeFrom
+        params['postType'] = submitData.post_type
       }
 
       HTTP.post('api/property/highlight/' + urlPath, {
@@ -349,7 +353,8 @@ export default {
   },
   watch: {
     result(to) {
-      const a_predict = to.a_predict
+      const a_hilight = to.a_listing.hilight ? JSON.parse(to.a_listing.hilight) : []
+      const a_predict = a_hilight ? a_hilight : to.a_predict
       const a_listing_obj = to.a_listing.addObj ? JSON.parse(to.a_listing.addObj) : []
       this.type = a_listing_obj.t ? a_listing_obj.t : '',
       this.comeFrom = a_listing_obj.s ? a_listing_obj.s : '',
@@ -386,7 +391,6 @@ export default {
         not_relate: 'not relate'
       },
       sourceList: {
-        'not line': 'not_line',
         facebook_group: 'fb_g',
         facebook_page: 'fb_p',
         baan_kaidee: 'baan.kaidee',
