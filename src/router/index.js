@@ -37,6 +37,9 @@ const routes = [
     meta: {
       layout: 'blank'
     },
+    props: {
+      token: getToken('user')
+    },
     component: () =>
       import(
         /* webpackChunkName: "listing-create" */ '../views/Listing/CreateEdit.vue'

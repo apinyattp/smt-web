@@ -300,14 +300,14 @@ export default {
         token: props.token,
         content: submitData.description,
         url: submitData.original,
-        comeform: submitData.comeFrom,
+        comeFrom: submitData.comeFrom,
         type: submitData.type,
         name: submitData.author,
         tel: submitData.tel,
         email: submitData.email,
         line_id: submitData.line,
         map: submitData.map,
-        post_type: submitData.post_type,
+        postType: submitData.post_type,
         highlightData: {
           a_entity: JSON.stringify(a_entity)
         }
@@ -320,9 +320,9 @@ export default {
       }
 
       HTTP.post('api/property/highlight/' + urlPath, {
-        params
+        ...params
       }).then((response) => {
-        router.push({ name: 'listing' })
+        router.push({ name: 'saved-list' })
       })
     });
 
