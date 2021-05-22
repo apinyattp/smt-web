@@ -17,24 +17,60 @@
         @keyup.enter="submitForm(params)"
       />
     </div>
-    <div
-      class="flex border border-gray-300 rounded-lg overflow-hidden items-center bg-dark-700"
-    >
-      <div class="h-14 w-14">
-        <img src="/img/sherman-tree.svg" class="h-full w-full object-contain" />
-      </div>
-      <div class="py-2 px-4">
-        <div class="font-medium text-gold-500 mb-1 w-28 truncate">
-          {{ userDetail.name }}
+    <popover>
+      <template #default="{ isOpen, toggler, close }">
+        <div
+          v-click-outside="close"
+          class="flex flex-col items-center relative"
+          @click="toggler"
+        >
+          <div
+            class="flex border overflow-hidden items-center cursor-pointer transition"
+            :class="
+              isOpen
+                ? 'rounded-t-lg border-gold-400 bg-gray-600 profile-border-bottom'
+                : 'rounded-lg border-gray-300 bg-dark-700'
+            "
+          >
+            <div class="h-14 w-14">
+              <img
+                src="/img/sherman-tree.svg"
+                class="h-full w-full object-contain"
+              />
+            </div>
+            <div class="py-2 px-4">
+              <div class="font-medium text-gold-500 mb-1 w-28 truncate">
+                {{ userDetail.name }}
+              </div>
+              <div class="text-xs text-gold-300 capitalize">
+                {{ userDetail.role }}
+              </div>
+            </div>
+            <div class="px-2">
+              <vue-feather
+                class="text-dark-500"
+                type="chevron-down"
+              ></vue-feather>
+            </div>
+            <transition appear name="slide-fade" mode="out-in">
+              <div
+                v-if="isOpen"
+                class="w-full bg-gray-600 absolute top-full bg-white border border-gold-400 divide-y divide-gray-100 rounded-b-lg shadow-lg outline-none border-t-0 left-0"
+              >
+                <div class="py-1">
+                  <div
+                    class="text-gray-300 text-gold-300 flex justify-between w-full px-4 py-3 text-sm leading-5 text-left cursor-pointer font-medium hover:bg-dark-600 transition ease-in-out focus:bg-dark-500"
+                    @click.stop="onLogout(close)"
+                  >
+                    Logout
+                  </div>
+                </div>
+              </div>
+            </transition>
+          </div>
         </div>
-        <div class="text-xs text-gold-300 capitalize">
-          {{ userDetail.role }}
-        </div>
-      </div>
-      <div class="px-2">
-        <vue-feather class="text-dark-500" type="chevron-down"></vue-feather>
-      </div>
-    </div>
+      </template>
+    </popover>
   </div>
   <search-filter
     :source-list="sourceList"
@@ -65,13 +101,13 @@
     @page-changed="changePage($event)"
     @per-page-changed="changePerPage($event)"
   ></pagination>
-  <modal :show="false"></modal>
 </template>
 
 <script>
+import Popover from '@/components/Popover'
+import { clickOutside } from '@/plugins/directives'
 import SearchFilter from '@/components/SearchFilterList.vue'
 import Pagination from '@/components/Pagination.vue'
-import Modal from '@/components/Modal/BaseModal.vue'
 import { HTTP } from '@/config/axios.js'
 import { getToken, getUserDetail } from '@/config/utils.js'
 
@@ -79,8 +115,9 @@ export default {
   components: {
     SearchFilter,
     Pagination,
-    Modal
+    Popover
   },
+  directives: { clickOutside },
   data() {
     return {
       search: '',
@@ -134,21 +171,25 @@ export default {
     }
   },
   watch: {
-    $route() {
-      this.fetchData()
+    $route(to) {
+      if (to.name === 'listing') {
+        this.fetchData()
+      }
     },
     idAddList(to) {
       this.addToMyList(to)
     }
   },
-  created() {},
   mounted() {
     this.fetchData()
   },
   methods: {
     fetchData() {
       HTTP.get('api/property/highlight/getData', {
-        params: Object.assign(this.params, {token: this.token})
+        params: Object.assign(this.params, {
+          ...this.$route.query,
+          token: this.token
+        })
       }).then((response) => {
         this.a_lists = response.data.data
         this.es_type = response.data.es_type
@@ -156,7 +197,6 @@ export default {
         this.total = response.data.total
         this.user_id = response.data.user_id
         this.cur_member = response.data.user_id
-        this.$router.push({ query: this.params })
       })
     },
     submitForm(params) {
@@ -184,22 +224,22 @@ export default {
       this.idAddList = id
     },
     setHilight(obj) {
-      if(typeof obj != 'undefined') {
+      if (typeof obj != 'undefined') {
         let hl = {
-          buy_phase :  obj.html.buy_phase,
-          investment :  obj.html.investment,
-          is_owner :  obj.html.is_owner,
-          location :  obj.html.location,
-          name :  obj.html.name,
-          number_bedroom :  obj.html.number_bedroom,
-          price :  obj.html.price,
-          rent_phase :  obj.html.rent_phase,
-          rentout_phase :  obj.html.rentout_phase,
-          sell_phase :  obj.html.sell_phase,
-          sell_rentout_phase :  obj.html.sell_rentout_phase,
-          size :  obj.html.size,
-          soi :  obj.html.soi,
-          station :  obj.html.station,
+          buy_phase: obj.html.buy_phase,
+          investment: obj.html.investment,
+          is_owner: obj.html.is_owner,
+          location: obj.html.location,
+          name: obj.html.name,
+          number_bedroom: obj.html.number_bedroom,
+          price: obj.html.price,
+          rent_phase: obj.html.rent_phase,
+          rentout_phase: obj.html.rentout_phase,
+          sell_phase: obj.html.sell_phase,
+          sell_rentout_phase: obj.html.sell_rentout_phase,
+          size: obj.html.size,
+          soi: obj.html.soi,
+          station: obj.html.station
         }
         return JSON.stringify(hl)
       }
@@ -217,7 +257,7 @@ export default {
         postType: items.type_agent ? items.type_agent : '',
         comeform: items.s
       }).then((response) => {
-         window.location = "/listing"
+        window.location = '/listing'
       })
     }
   }
