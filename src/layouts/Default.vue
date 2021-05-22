@@ -7,7 +7,7 @@
       class="w-5/6 bg-gradient-to-r from-gray-300 to-dark-700 h-screen overflow-auto"
     >
       <div class="py-12 px-16">
-        <router-view />
+        <router-view :key="$router.fullPath" />
       </div>
     </div>
   </div>

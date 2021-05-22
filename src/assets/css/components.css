@@ -90,3 +90,15 @@ span.flatpickr-weekday {
 .flatpickr-day.prevMonthDay {
   color: #5A5B63 !important;
 }
+
+.flatpickr-day.inRange {
+  background: #938063 !important;
+  border-color: #938063 !important;
+  box-shadow: -5px 0 0 #938063, 5px 0 0 #938063 !important;
+  color: #f6f3ee !important;
+}
+
+.flatpickr-day.selected, .flatpickr-day.startRange {
+  background: #5c544a !important;
+  border-color: #5c544a !important;
+}
