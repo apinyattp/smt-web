@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { getToken } from '@/config/utils.js'
 
 const routes = [
   {
@@ -48,7 +49,8 @@ const routes = [
       layout: 'blank'
     },
     props: {
-      isEdit: true
+      isEdit: true,
+      token: getToken('user')
     },
     component: () =>
       import(

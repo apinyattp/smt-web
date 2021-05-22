@@ -1,9 +1,6 @@
 <template>
   <div class="relative">
-    <div
-      v-if="checkIsView()"
-      class="absolute -right-0.5 -top-0.5"
-    >
+    <div v-if="checkIsView()" class="absolute -right-0.5 -top-0.5">
       <span class="flex h-4 w-4">
         <span
           class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-300 opacity-50"

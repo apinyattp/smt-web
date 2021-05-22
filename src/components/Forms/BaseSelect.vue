@@ -108,6 +108,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.error {
+  --tw-border-opacity: 1;
+  border-color: rgba(220, 38, 38, var(--tw-border-opacity));
+}
 .dropdown:focus-within .dropdown-menu {
   opacity: 1;
   transform: translate(0) scale(1);
