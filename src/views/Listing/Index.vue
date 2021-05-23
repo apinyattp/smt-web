@@ -114,13 +114,13 @@ import authMixin from '@/config/auth.js'
 import commonMixin from '@/config/common.js'
 
 export default {
-  mixins: [authMixin, commonMixin],
   components: {
     SearchFilter,
     Pagination,
     Popover
   },
   directives: { clickOutside },
+  mixins: [authMixin, commonMixin],
   data() {
     return {
       search: '',
