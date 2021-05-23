@@ -8,9 +8,8 @@
         "user" : "root",
         "host" : ["159.89.208.94"],
         "ref"  : "origin/master",
-        "repo" : "git@gitlab.com:bearrunrun/cba_line_gateway.git",
+        "repo" : "git@github.com:apinyattp/smt-web.git",
         "path" : "/root/smt-web",
-        "ssh_options": ["ForwardAgent=yes"],
         "post-deploy" : "npm install && pm2 startOrRestart ecosystem.json --env production" 
      }
   }
