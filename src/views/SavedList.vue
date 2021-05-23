@@ -503,10 +503,9 @@ export default {
         this.es_type = response.data.es_type
         this.sourceList = { ...this.sourceList, ...response.data.es_source }
         this.total = response.data.total
-        this.allUser = response.data.all_user
+        this.allUser = response.data.team
+        this.allUser[response.data.admin_id] = this.userDetail.name
         this.statusFeed = 'success'
-        // delete this.params['token']
-        // this.$router.push({ query: this.params})
       })
     },
     convertDate(date) {
