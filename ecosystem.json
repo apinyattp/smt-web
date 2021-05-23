@@ -1,7 +1,7 @@
 {
   "apps" : [{
      "name" : "smtweb",
-     "script" : "node index.js"
+     "script" : "npm run serve"
   }],
   "deploy" : {
      "production" : {
