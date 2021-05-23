@@ -251,7 +251,11 @@ export default {
         postType: items.type_agent ? items.type_agent : '',
         comeform: items.s
       }).then((response) => {
-        window.location = '/listing'
+        this.$router.push({
+          name: 'listing-edit',
+          params: { id: items.id }
+        })
+        // window.location = '/listing'
       })
     }
   }

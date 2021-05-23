@@ -43,6 +43,11 @@ export default {
           icon: 'users',
           label: 'My Team',
           to: { name: 'my-team' }
+        },
+        {
+          icon: 'map',
+          label: 'Contact',
+          to: { name: 'contact' }
         }
       ]
     }
