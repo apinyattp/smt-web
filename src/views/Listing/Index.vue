@@ -82,7 +82,7 @@
     @update:submitForm="submitForm($event)"
   ></search-filter>
   <h5 class="text-gold-300 mb-6">Listing</h5>
-  <template v-if="a_lists">
+  <template v-if="statusFeed">
     <div class="relative space-y-6">
       <card
         v-for="list in a_lists"
@@ -134,6 +134,7 @@ export default {
   mixins: [authMixin, commonMixin],
   data() {
     return {
+      statusFeed: '',
       search: '',
       total: 0,
       a_lists: [],
@@ -199,6 +200,7 @@ export default {
   },
   methods: {
     fetchData() {
+      this.statusFeed = ''
       HTTP.get('api/property/highlight/getData', {
         params: Object.assign(this.params, {
           ...this.$route.query,
@@ -211,6 +213,7 @@ export default {
         this.total = response.data.total
         this.user_id = response.data.user_id
         this.cur_member = response.data.user_id
+        this.statusFeed = 'success'
         // delete this.params['token']
         // this.$router.push({ query: this.params})
       })

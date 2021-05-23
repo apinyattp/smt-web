@@ -163,7 +163,7 @@
         </tr>
       </thead>
       <tbody>
-        <template v-if="a_lists.length">
+        <template v-if="statusFeed">
           <tr v-for="lists in a_lists" :key="lists">
             <td>
               <div class="">
@@ -173,7 +173,7 @@
                     : convertDate(lists.dt)
                 }}
               </div>
-              <div class="text-sm text-gold-500">Admin A</div>
+              <div class="text-sm text-gold-500">{{allUser[lists.a_listing.user_update_id]}}</div>
             </td>
             <td>
               <div class="text-gold-200">
@@ -363,6 +363,7 @@ export default {
   mixins: [authMixin, commonMixin],
   data() {
     return {
+      statusFeed: '',
       search: '',
       total: 0,
       a_lists: [],
@@ -387,6 +388,7 @@ export default {
         owner: 'นายหน้า'
       },
       userDetail: getUserDetail('user'),
+      allUser: {},
       params: {
         search: '',
         user_id_list: '',
@@ -490,6 +492,7 @@ export default {
       }
     },
     fetchData() {
+      this.statusFeed = ''
       HTTP.get('api/property/highlight/getDataListing', {
         params: Object.assign(this.params, {
           ...this.$route.query,
@@ -500,6 +503,8 @@ export default {
         this.es_type = response.data.es_type
         this.sourceList = { ...this.sourceList, ...response.data.es_source }
         this.total = response.data.total
+        this.allUser = response.data.all_user
+        this.statusFeed = 'success'
         // delete this.params['token']
         // this.$router.push({ query: this.params})
       })
