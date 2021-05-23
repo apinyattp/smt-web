@@ -1,4 +1,6 @@
 <template>
+  {{selected}}
+  {{payload}}
   <transition appear name="slide-fade" mode="out-in">
     <div
       v-if="show"
@@ -18,15 +20,15 @@
             class="flex flex-col items-start space-y-4 mt-6 font-medium text-gold-200"
           >
             <label for="opt1" class="radio">
-              <input id="opt1" type="radio" name="rdo" class="hidden" />
+              <input id="opt1" type="radio" v-model="payload" :checked="selected == 'sold'" name="rdo" class="hidden" value="sold" />
               <span class="label" /> ขายแล้ว
             </label>
             <label for="opt2" class="radio">
-              <input id="opt2" type="radio" name="rdo" class="hidden" />
+              <input id="opt2" type="radio" v-model="payload" :checked="selected == 'avaliable'" name="rdo" class="hidden" value="avaliable" />
               <span class="label" /> ว่าง
             </label>
             <label for="opt3" class="radio">
-              <input id="opt3" type="radio" name="rdo" class="hidden" />
+              <input id="opt3" type="radio" v-model="payload" name="rdo" :checked="selected == 'cancel'" class="hidden" value="cancel"/>
               <span class="label" /> ยกเลิก
             </label>
           </div>
@@ -39,7 +41,7 @@
             </button>
             <button
               class="btn rounded bg-white text-gold-400 py-3"
-              @click="$emit('submit', payload)"
+              @click="submitData()"
             >
               ยืนยัน
             </button>
@@ -56,12 +58,24 @@ export default {
     show: {
       type: Boolean,
       default: false
+    },
+    selected: {
+      type: String,
+      default: ''
     }
   },
   emits: ['close', 'submit'],
   data() {
     return {
-      payload: {}
+      payload: ''
+    }
+  },
+  methods: {
+    submitData() {
+      if(!this.payload) {
+        this.payload = this.selected
+      }
+      this.$emit('submit', this.payload)
     }
   }
 }

@@ -17,7 +17,15 @@
             เลือกวันเวลาที่สะดวกติดตาม
           </div>
           <div class="flex flex-col space-y-2 mt-4 font-medium text-gold-200">
-            <base-select></base-select>
+            <datepicker
+              v-model="payload"
+              prefix-icon="calendar"
+              min-date="today"
+              label="ช่วงเวลา"
+              mode="single"
+              :model-value="selected"
+              @update:modelValue="selectTrackingDate($event)"
+            ></datepicker>
           </div>
           <div class="grid grid-cols-2 gap-x-2 mt-8">
             <button
@@ -40,17 +48,32 @@
 </template>
 
 <script>
+import myMixin from '@/config/common.js'
+import Datepicker from '@/components/Forms/Datepicker.vue'
 export default {
+  mixins: [myMixin],
   props: {
     show: {
       type: Boolean,
       default: false
+    },
+    selected: {
+      type: String,
+      default: ''
     }
   },
   emits: ['close', 'submit'],
+  components: {
+    Datepicker
+  },
   data() {
     return {
-      payload: {}
+      payload: ''
+    }
+  },
+  methods: {
+    selectTrackingDate(date) {
+      this.payload =  date.dateStr ? date.dateStr : false
     }
   }
 }

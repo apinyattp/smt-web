@@ -54,21 +54,31 @@ export default {
     modelValue: {
       type: [String, Number],
       default: null
-    }
+    },
+    mode: {
+      type: String,
+      default: 'range'
+    },
+    minDate: {
+      type: [String, Boolean],
+      default: false
+    },
   },
   emits: ['update:modelValue'],
   data() {
     return {
       date: null,
-      dateFormat: "d/m/Y",
+      dateFormat: "Y-m-d",
       config: {
+        minDate: this.minDate,
         allowInput: true,
-        mode: 'range',
+        mode: this.mode,
         wrap: true,
         onChange: (selectedDates, dateStr, instance) => {
           const dateRange = {
             start: new Date(selectedDates[0]).toLocaleDateString('en-GB'),
-            end: new Date(selectedDates[1]).toLocaleDateString('en-GB')
+            end: new Date(selectedDates[1]).toLocaleDateString('en-GB'),
+            dateStr: dateStr
           }
           this.$emit('update:modelValue', dateRange)
         }

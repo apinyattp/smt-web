@@ -354,19 +354,28 @@ export default {
   watch: {
     result(to) {
       const a_hilight = to.a_listing.hilight ? JSON.parse(to.a_listing.hilight) : []
-      const a_predict = a_hilight ? a_hilight : to.a_predict
+      const a_predict = to.a_predict
       const a_listing_obj = to.a_listing.addObj ? JSON.parse(to.a_listing.addObj) : []
+      const mapPredict = { 
+        name : a_predict.name ? a_predict.name.join(', ') : '',
+        location : a_predict.location ? a_predict.location.join(', ') : '',
+        price : a_predict.price ? a_predict.price.join(', ') : '',
+        size : a_predict.size ? a_predict.size.join(', ') : '',
+        roomType : a_predict.number_bedroom ? a_predict.number_bedroom.join(', ') : '',
+        subway : a_predict.station ? a_predict.station.join(', ') : '',
+      }
+
       this.type = a_listing_obj.t ? a_listing_obj.t : '',
       this.comeFrom = a_listing_obj.s ? a_listing_obj.s : '',
       this.map = a_listing_obj.map,
       this.description = to.a_listing.content,
       this.original = a_listing_obj.u,
-      this.name = a_predict.name ? a_predict.name.join(', ') : '',
-      this.location = a_predict.location ? a_predict.location.join(', ') : '',
-      this.price = a_predict.price ? a_predict.price.join(', ') : '',
-      this.size = a_predict.size ? a_predict.size.join(', ') : '',
-      this.roomType = a_predict.number_bedroom ? a_predict.number_bedroom.join(', ') : '',
-      this.subway = a_predict.station ? a_predict.station.join(', ') : '',
+      this.name = a_hilight.name ? a_hilight.name.join(', ') : mapPredict.name,
+      this.location = a_hilight.location ? a_hilight.location.join(', ') : mapPredict.location,
+      this.price = a_hilight.price ? a_hilight.price.join(', ') : mapPredict.price,
+      this.size = a_hilight.size ? a_hilight.size.join(', ') : mapPredict.size,
+      this.roomType = a_hilight.number_bedroom ? a_hilight.number_bedroom.join(', ') : mapPredict.number_bedroom,
+      this.subway = a_hilight.station ? a_hilight.station.join(', ') : mapPredict.station,
       this.post_type = a_listing_obj.post_type,
       this.author = a_listing_obj.name,
       this.tel = a_listing_obj.tel,

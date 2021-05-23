@@ -219,19 +219,19 @@
                           >
                           <div
                             class="cursor-pointer"
-                            @click="statusModalShow = true"
+                            @click="setDataModalStatus('status', lists.a_listing.saleStatus, lists.id)"
                           >
                             สถานะการขาย
                           </div>
                           <div
                             class="cursor-pointer"
-                            @click="trackingModalShow = true"
+                            @click="setDataModalStatus('tracking', lists.a_listing.appointment, lists.id)"
                           >
                             นัดหมายการติดตาม
                           </div>
                           <div
                             class="cursor-pointer"
-                            @click="reportModalShow = true"
+                            @click="setDataModalStatus('report', '', lists.id)"
                           >
                             รายงาน/ปรับปรุง
                           </div>
@@ -242,7 +242,7 @@
                 </popover>
                 <button
                   class="btn bg-gray-500 rounded-full py-3 px-6 hover:bg-gray-400 active:bg-gray-500"
-                  @click="toggleCallLogsModal"
+                  @click="toggleCallLogsModal(lists)"
                 >
                   <div class="flex items-center">
                     <span class="mr-2">ข้อมูล</span>
@@ -277,11 +277,13 @@
 
   <status-modal
     :show="statusModalShow"
+    :selected="statusCurrent"
     @close="statusModalShow = false"
     @submit="onSubmitStatusModal"
   ></status-modal>
   <tracking-modal
     :show="trackingModalShow"
+    :selected="trackingCurrent"
     @close="trackingModalShow = false"
     @submit="onSubmitTrackingModal"
   ></tracking-modal>
@@ -292,6 +294,7 @@
   ></report-modal>
   <call-logs-modal
     :show="callLogsModalShow"
+    :form="callLogsModalForm"
     @close="callLogsModalShow = false"
     @submit="onSubmitCallLogsModalForm"
   ></call-logs-modal>
@@ -367,28 +370,24 @@ export default {
         is_check: '',
         predict_type: '',
         is_listing: '1',
-        is_view: '0',
+        is_view: '',
         saleStatus: '',
         telStatus: '',
         property_id: ''
       },
       token: getToken('user'),
+      statusCurrent: '',
+      trackingCurrent: '',
+      idCurrent: '',
       statusModalShow: false,
       trackingModalShow: false,
       reportModalShow: false,
       callLogsModalShow: false,
       callLogsModalForm: {
-        contact: 'เอ',
-        tel: '089 987 0971',
+        contact: '',
+        tel: '',
         note: '',
-        logs: [
-          {
-            date: '12 เม.ย. 64',
-            time: '	22:23:13',
-            caller: '	Admin A',
-            note: '	ไม่รับสาย'
-          }
-        ]
+        logs: []
       },
       propertyList: [],
       isSearching: false,
@@ -509,21 +508,78 @@ export default {
     closeStatusModal(result) {
       this.statusModalShow = false
     },
-    toggleCallLogsModal(item) {
-      // this.callLogsModalForm = item
-      this.callLogsModalShow = true
+    toggleCallLogsModal(items) {
+      if(!items.obj.tel) {
+        const { value } = this.$swal.fire({
+          icon: 'warning',
+          title: 'กรุณาแก้ไขเบอร์โทร',
+          width: 426,
+          confirmButtonText: 'ตกลง',
+          showCancelButton: false
+        })
+      }else{
+        this.idCurrent = items.id
+        HTTP.get('api/property/highlight/get_call_log', {
+          params: {
+            token: this.token,
+            id: items.id
+          }
+        }).then((response) => {
+          this.callLogsModalForm = {
+            contact: items.obj.name,
+            tel: items.obj.tel,
+            note: '',
+            logs: response.data.results
+          }
+          this.callLogsModalShow = true
+        })
+      }
     },
-    onSubmitCallLogsModalForm() {
+    onSubmitCallLogsModalForm(note) {
       try {
-        console.log('post axios request')
+        if(note) {
+          HTTP.post('api/property/highlight/call_log', {
+            token: this.token,
+            id: this.idCurrent,
+            note: note
+          }).then((response) => {
+            this.idCurrent = ''
+            this.callLogsModalForm = {
+              contact: '',
+              tel: '',
+              note: '',
+              logs: []
+            }
+          })
+        }
       } catch (error) {
         console.log(error)
       }
       this.closeCallLogsModal()
     },
+    onWarning() {
+      const { value } = this.$swal.fire({
+        icon: 'error',
+        title: 'กรุณากรอกข้อมูลให้ครบถ้วน',
+        width: 426,
+        confirmButtonText: 'ตกลง',
+        showCancelButton: false
+      })
+    },
     onSubmitReportModal(payload) {
       try {
-        console.log('post axios request with payload', payload)
+        if(payload.selected == '' || (payload.selected == 'other' && payload.note == '')) {
+          return this.onWarning()
+        }else{
+          HTTP.post('api/property/highlight/log_report', {
+            token: this.token,
+            id: this.idCurrent,
+            reason: payload.selected,
+            content: payload.note
+          }).then((response) => {
+            this.idCurrent = ''
+          })
+        }
       } catch (error) {
         console.log(error)
       }
@@ -531,7 +587,19 @@ export default {
     },
     onSubmitTrackingModal(payload) {
       try {
-        console.log('post axios request with payload', payload)
+        if(!payload) {
+          return this.onWarning()
+        }else{
+          HTTP.post('api/property/highlight/appointment', {
+            token: this.token,
+            id: this.idCurrent,
+            date: payload
+          }).then((response) => {
+            this.idCurrent = ''
+            this.trackingCurrent = ''
+            this.fetchData()
+          })
+        }
       } catch (error) {
         console.log(error)
       }
@@ -539,11 +607,32 @@ export default {
     },
     onSubmitStatusModal(payload) {
       try {
-        console.log('post axios request with payload', payload)
+        if(!payload) {
+          this.onWarning()
+        }else{
+          if(payload != this.statusCurrent) {
+            HTTP.post('api/property/highlight/updateSaleStatus', {
+              token: this.token,
+              id: this.idCurrent,
+              status: payload
+            }).then((response) => {
+              this.idCurrent = ''
+              this.statusCurrent = ''
+              this.fetchData()
+            })
+          }
+        }
       } catch (error) {
         console.log(error)
       }
       this.closeStatusModal()
+    },
+    setDataModalStatus(dataSetName, status, id) {
+      if(status != '') {
+        this[dataSetName + 'Current'] = status
+      }
+      this.idCurrent = id
+      this[dataSetName + 'ModalShow'] = true
     }
   }
 }

@@ -14,12 +14,12 @@
         <div class="mt-2">
           <div class="text-lg text-gold-400 font-bold">ข้อมูลการโทรออก</div>
           <div class="flex flex-col space-y-2 w-1/2 mt-4">
-            <div class="text-sm text-gray-200 font-medium">ติดต่อคุณเอ</div>
+            <div class="text-sm text-gray-200 font-medium">ติดต่อคุณ {{form.contact}}</div>
             <a
               href="#"
               class="block bg-green text-white text-center py-3 rounded font-bold"
             >
-              089 987 097
+              {{form.tel}}
             </a>
           </div>
           <div
@@ -28,6 +28,7 @@
             <div class="text-sm text-gray-200 font-medium">บันทึก</div>
             <input
               type="text"
+              v-model="note"
               class="font-medium block w-full py-3 pl-4 sm:text-sm border-gold-600 rounded-lg placeholder-gold-500 hover:border-gold-600 focus:border-gold-500 focus:ring-0 transition-colors duration-200 ease-in-out text-gold-300 bg-op"
             />
           </div>
@@ -48,11 +49,11 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>12 เม.ย. 64</td>
-                    <td>22:23:13</td>
-                    <td>Admin A</td>
-                    <td>ไม่รับสาย</td>
+                  <tr v-for="logs in form.logs" :key="logs">
+                    <td>{{convertLogsDate(logs.date)}}</td>
+                    <td>{{logs.time ? logs.time : '-'}}</td>
+                    <td>{{logs.caller ? logs.caller : '-'}}</td>
+                    <td>{{logs.note ? logs.note : '-'}}</td>
                   </tr>
                 </tbody>
               </table>
@@ -67,7 +68,7 @@
             </button>
             <button
               class="btn rounded font-medium bg-white text-gold-400 py-3"
-              @click="$emit('submit')"
+              @click="submitData()"
             >
               ยืนยัน
             </button>
@@ -81,6 +82,7 @@
 <script>
 /* eslint-disable */
 import Modal from './BaseModal.vue'
+import * as moment from 'moment/moment'
 
 export default {
   components: {
@@ -96,9 +98,27 @@ export default {
     callLogs: {
       type: String,
       default: ''
+    },
+    form: {
+      type: Object,
+      default: {}
+    }
+  },
+  data() {
+    return {
+      note: ''
     }
   },
   methods: {
+    convertLogsDate(date) {
+      if (date == null || date == '') return '-'
+      moment.locale('th')
+      return moment(date).add(543, 'year').format('ll')
+    },
+    submitData() {
+      this.$emit('submit', this.note)
+      this.note = ''
+    }
   }
 }
 </script>

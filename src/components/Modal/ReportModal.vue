@@ -17,8 +17,14 @@
             เลือกเหตุผลที่ต้องการให้ปรับปรุง
           </div>
           <div class="flex flex-col space-y-2 mt-4 font-medium text-gold-200">
-            <base-select></base-select>
+            <base-select
+              v-model="payload.selected"
+              :options="setOption(reportList)"
+              :model-value="payload.selected"
+              @update:modelValue="payload.selected = $event"
+            ></base-select>
             <input
+              v-if="payload.selected == 'other'"
               v-model="payload.note"
               type="text"
               class="font-medium block w-full py-3 pl-4 sm:text-sm border-gold-600 rounded-lg placeholder-gold-500 hover:border-gold-600 focus:border-gold-500 focus:ring-0 transition-colors duration-200 ease-in-out text-gold-300 bg-op"
@@ -45,20 +51,33 @@
 </template>
 
 <script>
+import myMixin from '@/config/common.js'
 export default {
+  mixins: [myMixin],
   props: {
     show: {
       type: Boolean,
       default: false
+    },
+    selected: {
+      type: String,
+      default: ''
     }
   },
   emits: ['close', 'submit'],
   data() {
     return {
       payload: {
-        selected: '',
+        selected: this.selected,
         note: ''
-      }
+      },
+      reportList: {
+        '' : 'เลือกประเภท',
+        duplicate_list : 'ข้อมูลซ้ำ',
+        not_relate_property: 'ไม่ใช่ข้อมูลที่เกี่ยวกับอสังหา',
+        incorrect_detail: 'Detail ผิด (เบอร์โทรผิด , link ผิด)',
+        other: 'อื่นๆ'
+      },
     }
   }
 }
