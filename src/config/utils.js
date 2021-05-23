@@ -9,29 +9,29 @@ export const setStore = (name, content) => {
   return window.localStorage.setItem(name, content)
 }
 /**
-  *Get localStorage
-*/
+ * Get localStorage
+ */
 export const getStore = (name) => {
   if (!name) return
   return JSON.parse(window.localStorage.getItem(name))
 }
 /**
-  * Get localStorage token
-*/
+ * Get localStorage token
+ */
 export const getToken = (name) => {
   if (!name) return
   return getStore(name) ? getStore(name).token : ''
 }
 /**
-  * Get localStorage token
-*/
+ * Get localStorage token
+ */
 export const getUserDetail = (name) => {
   if (!name) return
   return getStore(name).userDetail
 }
 /**
  * Clear localStorage
-*/
+ */
 export const removeItem = (name) => {
   if (!name) return
   return window.localStorage.removeItem(name)
@@ -40,5 +40,7 @@ export const removeItem = (name) => {
  * Validate Email address
  */
 export const isValidEmail = (value) => {
-  return value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,64}$/i.test(value) ? false : true
+  return value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,64}$/i.test(value)
+    ? false
+    : true
 }

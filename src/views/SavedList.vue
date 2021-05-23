@@ -61,10 +61,11 @@
                     <template v-if="isSearchingProperty"
                       >searching "{{ params.property_name }}"</template
                     >
-                    <template v-else-if="isSearchedProperty && !isSearchingProperty"
-                      >"{{ params.property_name }}" did not match any
-                      property.</template
+                    <template
+                      v-else-if="isSearchedProperty && !isSearchingProperty"
                     >
+                      "{{ params.property_name }}" did not match any property.
+                    </template>
                   </div>
                 </template>
               </div>
@@ -235,13 +236,25 @@
                           >
                           <div
                             class="cursor-pointer"
-                            @click="setDataModalStatus('status', lists.a_listing.saleStatus, lists.id)"
+                            @click="
+                              setDataModalStatus(
+                                'status',
+                                lists.a_listing.saleStatus,
+                                lists.id
+                              )
+                            "
                           >
                             สถานะการขาย
                           </div>
                           <div
                             class="cursor-pointer"
-                            @click="setDataModalStatus('tracking', lists.a_listing.appointment, lists.id)"
+                            @click="
+                              setDataModalStatus(
+                                'tracking',
+                                lists.a_listing.appointment,
+                                lists.id
+                              )
+                            "
                           >
                             นัดหมายการติดตาม
                           </div>
@@ -333,7 +346,6 @@ import authMixin from '@/config/auth.js'
 import commonMixin from '@/config/common.js'
 
 export default {
-  mixins: [authMixin, commonMixin],
   components: {
     SearchFilter,
     Popover,
@@ -344,6 +356,7 @@ export default {
     ReportModal
   },
   directives: { clickOutside },
+  mixins: [authMixin, commonMixin],
   data() {
     return {
       search: '',
@@ -393,7 +406,7 @@ export default {
         saleStatus: '',
         telStatus: '',
         property_id: '',
-        property_name: '',
+        property_name: ''
       },
       token: getToken('user'),
       statusCurrent: '',
@@ -419,7 +432,10 @@ export default {
       return debounce(this.getPropertyName, 500)
     },
     isSearchPropertyResultShow() {
-      return this.params.property_name && (this.isSearchedProperty || this.isSearchingProperty)
+      return (
+        this.params.property_name &&
+        (this.isSearchedProperty || this.isSearchingProperty)
+      )
     }
   },
   watch: {
@@ -480,6 +496,8 @@ export default {
         this.es_type = response.data.es_type
         this.sourceList = { ...this.sourceList, ...response.data.es_source }
         this.total = response.data.total
+        // delete this.params['token']
+        // this.$router.push({ query: this.params})
       })
     },
     convertDate(date) {
@@ -502,6 +520,7 @@ export default {
     submitForm(params) {
       let query = this.$route.query
       this.params = { ...query, ...params }
+      delete this.params['token']
       this.$router.replace({ name: 'saved-list', query: this.params })
     },
     closeCallLogsModal(result) {
@@ -517,7 +536,7 @@ export default {
       this.statusModalShow = false
     },
     toggleCallLogsModal(items) {
-      if(!items.obj.tel) {
+      if (!items.obj.tel) {
         const { value } = this.$swal.fire({
           icon: 'warning',
           title: 'กรุณาแก้ไขเบอร์โทร',
@@ -525,7 +544,7 @@ export default {
           confirmButtonText: 'ตกลง',
           showCancelButton: false
         })
-      }else{
+      } else {
         this.idCurrent = items.id
         HTTP.get('api/property/highlight/get_call_log', {
           params: {
@@ -545,7 +564,7 @@ export default {
     },
     onSubmitCallLogsModalForm(note) {
       try {
-        if(note) {
+        if (note) {
           HTTP.post('api/property/highlight/call_log', {
             token: this.token,
             id: this.idCurrent,
@@ -576,9 +595,12 @@ export default {
     },
     onSubmitReportModal(payload) {
       try {
-        if(payload.selected == '' || (payload.selected == 'other' && payload.note == '')) {
+        if (
+          payload.selected == '' ||
+          (payload.selected == 'other' && payload.note == '')
+        ) {
           return this.onWarning()
-        }else{
+        } else {
           HTTP.post('api/property/highlight/log_report', {
             token: this.token,
             id: this.idCurrent,
@@ -595,9 +617,9 @@ export default {
     },
     onSubmitTrackingModal(payload) {
       try {
-        if(!payload) {
+        if (!payload) {
           return this.onWarning()
-        }else{
+        } else {
           HTTP.post('api/property/highlight/appointment', {
             token: this.token,
             id: this.idCurrent,
@@ -615,10 +637,10 @@ export default {
     },
     onSubmitStatusModal(payload) {
       try {
-        if(!payload) {
+        if (!payload) {
           this.onWarning()
-        }else{
-          if(payload != this.statusCurrent) {
+        } else {
+          if (payload != this.statusCurrent) {
             HTTP.post('api/property/highlight/updateSaleStatus', {
               token: this.token,
               id: this.idCurrent,
@@ -636,7 +658,7 @@ export default {
       this.closeStatusModal()
     },
     setDataModalStatus(dataSetName, status, id) {
-      if(status != '') {
+      if (status != '') {
         this[dataSetName + 'Current'] = status
       }
       this.idCurrent = id
