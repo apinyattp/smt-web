@@ -10,7 +10,7 @@
         "ref"  : "origin/master",
         "repo" : "git@github.com:apinyattp/smt-web.git",
         "path" : "/home/smtweb/smt-web",
-        "post-deploy" : "npm install" 
+        "post-deploy" : "npm install && pm2 startOrRestart ecosystem.json --env production" 
      }
   }
 }
