@@ -45,6 +45,15 @@ export default {
             if(dateRange.end != 'Invalid Date') {
               this.params.endDate = dateRange.end
             }
+        },
+        changePage(page) {
+            this.params.page = page
+            this.submitForm(this.params)
+        },
+        changePerPage(perPage) {
+            this.params.page = 1
+            this.params.perpage = perPage
+            this.submitForm(this.params)
         }
     }
 }

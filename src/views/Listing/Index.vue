@@ -111,9 +111,10 @@ import Pagination from '@/components/Pagination.vue'
 import { HTTP } from '@/config/axios.js'
 import { getToken, getUserDetail } from '@/config/utils.js'
 import authMixin from '@/config/auth.js'
+import commonMixin from '@/config/common.js'
 
 export default {
-  mixins: [authMixin],
+  mixins: [authMixin, commonMixin],
   components: {
     SearchFilter,
     Pagination,
@@ -205,15 +206,6 @@ export default {
       let query = this.$route.query
       this.params = { ...query, ...params }
       this.$router.replace({ query: this.params })
-    },
-    changePage(page) {
-      this.params.page = page
-      this.submitForm(this.params)
-    },
-    changePerPage(perPage) {
-      this.params.page = 1
-      this.params.perpage = perPage
-      this.submitForm(this.params)
     },
     viewData(id) {
       HTTP.post('api/property/highlight/updateView', {

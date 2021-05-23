@@ -70,38 +70,6 @@
       </div>
     </div>
   </div>
-  <transition appear name="slide-fade" mode="out-in">
-    <div
-      v-if="isOpen && isSearchResultShow"
-      class="w-full bg-gray-600 absolute top-full mt-2 bg-white border border-gold-300 divide-y divide-gray-100 rounded-md shadow-lg outline-none z-10"
-    >
-      <div class="py-1 autocomplete-container">
-        <template v-if="propertyList.length">
-          <div
-            v-for="property in propertyList"
-            :key="property.id"
-            class="text-gold-300 w-full px-4 py-3 text-sm leading-5 text-left cursor-pointer font-medium hover:bg-dark-600 transition ease-in-out focus:bg-dark-500"
-            @click="onPropertySelect(property, close)"
-          >
-            {{ property.property_name }}
-          </div>
-        </template>
-        <template v-else>
-          <div
-            class="text-gold-300 px-4 py-3 text-sm leading-5 text-center"
-          >
-            <template v-if="isSearching"
-              >searching "{{ params.search }}"</template
-            >
-            <template v-else-if="isSearched && !isSearching"
-              >"{{ params.search }}" did not match any
-              property.</template
-            >
-          </div>
-        </template>
-      </div>
-    </div>
-  </transition>
 </template>
 
 <script>
@@ -159,8 +127,19 @@ export default {
         dateFormat: 'Y-m-d'
       },
       date: '',
-      params: Object.assign({}, this.searchForm),
+      params: this.searchForm,
       defaultParams: this.defaultForm
+    }
+  },
+  watch: {
+    searchForm: {
+      handler(to) {
+        to.page = parseInt(to.page)
+        to.perpage = parseInt(to.perpage)
+        this.params = to
+      },
+      deep: true,
+      immediate: true
     }
   },
   methods: {

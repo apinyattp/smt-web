@@ -330,9 +330,10 @@ import CallLogsModal from '@/components/Modal/CallLogsModal.vue'
 import ReportModal from '@/components/Modal/ReportModal.vue'
 import debounce from 'lodash/debounce'
 import authMixin from '@/config/auth.js'
+import commonMixin from '@/config/common.js'
 
 export default {
-  mixins: [authMixin],
+  mixins: [authMixin, commonMixin],
   components: {
     SearchFilter,
     Popover,
@@ -470,20 +471,17 @@ export default {
     },
     fetchData() {
       HTTP.get('api/property/highlight/getDataListing', {
-        params: Object.assign(this.params, { token: this.token })
+        params: Object.assign(this.params, {
+          ...this.$route.query,
+          token: this.token
+        })
       }).then((response) => {
         this.a_lists = response.data.data
         this.es_type = response.data.es_type
         this.sourceList = { ...this.sourceList, ...response.data.es_source }
         this.total = response.data.total
-        this.$router.push({ query: this.params })
       })
     },
-    // onLogout(close) {
-    //   removeItem('user')
-    //   this.$router.push({ path: '/login', name: 'login' })
-    //   close()
-    // },
     convertDate(date) {
       if (date == null || date == '') return '-'
       moment.locale('th')
@@ -505,15 +503,6 @@ export default {
       let query = this.$route.query
       this.params = { ...query, ...params }
       this.$router.replace({ name: 'saved-list', query: this.params })
-    },
-    changePage(page) {
-      this.params.page = page
-      this.submitForm(this.params)
-    },
-    changePerPage(perPage) {
-      this.params.page = 1
-      this.params.perpage = perPage
-      this.submitForm(this.params)
     },
     closeCallLogsModal(result) {
       this.callLogsModalShow = false
