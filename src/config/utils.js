@@ -20,7 +20,7 @@ export const getStore = (name) => {
 */
 export const getToken = (name) => {
   if (!name) return
-  return getStore(name).token
+  return getStore(name) ? getStore(name).token : ''
 }
 /**
   * Get localStorage token
