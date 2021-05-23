@@ -200,6 +200,7 @@ export default {
         this.total = response.data.total
         this.user_id = response.data.user_id
         this.cur_member = response.data.user_id
+        this.$router.push({ query: this.params})
       })
     },
     submitForm(params) {
