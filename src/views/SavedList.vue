@@ -1,5 +1,22 @@
 <template>
   <div class="flex justify-between items-center mb-24">
+    <div class="w-1/3 relative">
+      <div class="absolute inset-y-0 left-0 flex items-center pl-6">
+        <vue-feather
+          class="text-gold-500"
+          stroke-width="2"
+          size="18"
+          type="search"
+        ></vue-feather>
+      </div>
+      <input
+        v-model="params.search"
+        type="text"
+        class="font-medium block w-full py-4 pl-14 pr-12 sm:text-sm border-gray-300 rounded-full bg-dark-700 placeholder-gold-500 focus:border-gold-300 focus:ring-0 transition-colors duration-200 ease-in-out text-gold-300"
+        placeholder="Search"
+        @keyup.enter="submitForm(params)"
+      />
+    </div>
     <popover>
       <template #default="{ isOpen, open, close }">
         <div v-click-outside="close" class="w-1/3 relative">
@@ -13,18 +30,17 @@
               ></vue-feather>
             </div>
             <input
-              v-model="params.search"
+              v-model="params.property_name"
               type="text"
               class="font-medium block w-full py-4 pl-14 pr-12 sm:text-sm border-gray-300 rounded-full bg-dark-700 placeholder-gold-500 focus:border-gold-300 focus:ring-0 transition-colors duration-200 ease-in-out text-gold-300"
-              placeholder="Search"
+              placeholder="ชื่อโครงการ"
               @click="open"
-              @input="onSearchChange"
-              @keyup.enter="submitForm(params)"
+              @input="onSearchPropertyChange"
             />
           </div>
           <transition appear name="slide-fade" mode="out-in">
             <div
-              v-if="isOpen && isSearchResultShow"
+              v-if="isOpen && isSearchPropertyResultShow"
               class="w-full bg-gray-600 absolute top-full mt-2 bg-white border border-gold-300 divide-y divide-gray-100 rounded-md shadow-lg outline-none z-10"
             >
               <div class="py-1 autocomplete-container">
@@ -42,11 +58,11 @@
                   <div
                     class="text-gold-300 px-4 py-3 text-sm leading-5 text-center"
                   >
-                    <template v-if="isSearching"
-                      >searching "{{ params.search }}"</template
+                    <template v-if="isSearchingProperty"
+                      >searching "{{ params.property_name }}"</template
                     >
-                    <template v-else-if="isSearched && !isSearching"
-                      >"{{ params.search }}" did not match any
+                    <template v-else-if="isSearchedProperty && !isSearchingProperty"
+                      >"{{ params.property_name }}" did not match any
                       property.</template
                     >
                   </div>
@@ -373,7 +389,8 @@ export default {
         is_view: '',
         saleStatus: '',
         telStatus: '',
-        property_id: ''
+        property_id: '',
+        property_name: '',
       },
       token: getToken('user'),
       statusCurrent: '',
@@ -390,16 +407,16 @@ export default {
         logs: []
       },
       propertyList: [],
-      isSearching: false,
-      isSearched: false
+      isSearchingProperty: false,
+      isSearchedProperty: false
     }
   },
   computed: {
-    onSearchSubmit() {
+    onSearchPropertySubmit() {
       return debounce(this.getPropertyName, 500)
     },
-    isSearchResultShow() {
-      return this.params.search && (this.isSearched || this.isSearching)
+    isSearchPropertyResultShow() {
+      return this.params.property_name && (this.isSearchedProperty || this.isSearchingProperty)
     }
   },
   watch: {
@@ -408,24 +425,24 @@ export default {
         this.fetchData()
       }
     },
-    'params.search'(to) {
-      this.isSearched = false
+    'params.property_name'(to) {
+      this.isSearchedProperty = false
       this.propertyList = []
-      if (!to) this.onSearchSubmit.cancel()
+      if (!to) this.onSearchPropertySubmit.cancel()
     }
   },
   mounted() {
     this.fetchData()
   },
   methods: {
-    onPropertySelect({ property_name }, close) {
-      // do your action here krub p' meow
-      // can also do search for named property list here
-      this.params.search = property_name
+    onPropertySelect(property, close) {
+      this.params.property_name = property.property_name
+      this.params.property_id = property._id
+      this.submitForm(this.params)
       close()
     },
     async getPropertyName() {
-      this.isSearching = true
+      this.isSearchingProperty = true
       const params = {
         type: 'current',
         search: this.params.search,
@@ -440,13 +457,13 @@ export default {
       })
 
       this.propertyList = dataList
-      this.isSearching = false
-      this.isSearched = true
+      this.isSearchingProperty = false
+      this.isSearchedProperty = true
     },
-    onSearchChange(event) {
+    onSearchPropertyChange(event) {
       const { value } = event.target
       if (value) {
-        this.onSearchSubmit(value)
+        this.onSearchPropertySubmit(value)
       }
     },
     fetchData() {
