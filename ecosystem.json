@@ -5,11 +5,11 @@
   }],
   "deploy" : {
      "production" : {
-        "user" : "root",
-        "host" : ["159.89.208.94"],
+        "user" : "smtweb",
+        "host" : ["174.138.20.129"],
         "ref"  : "origin/master",
         "repo" : "git@github.com:apinyattp/smt-web.git",
-        "path" : "/root/smt-web",
+        "path" : "/home/smtweb/smt-web",
         "post-deploy" : "npm install && pm2 startOrRestart ecosystem.json --env production" 
      }
   }
