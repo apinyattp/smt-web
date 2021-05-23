@@ -480,8 +480,8 @@ export default {
         this.es_type = response.data.es_type
         this.sourceList = { ...this.sourceList, ...response.data.es_source }
         this.total = response.data.total
-        delete this.params['token']
-        this.$router.push({ query: this.params})
+        // delete this.params['token']
+        // this.$router.push({ query: this.params})
       })
     },
     convertDate(date) {
