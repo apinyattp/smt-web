@@ -543,7 +543,7 @@ export default {
       if (!items.obj.tel) {
         const { value } = this.$swal.fire({
           icon: 'warning',
-          title: 'กรุณาแก้ไขเบอร์โทร',
+          title: 'กรุณาอัพเดตเบอร์โทร',
           width: 426,
           confirmButtonText: 'ตกลง',
           showCancelButton: false
