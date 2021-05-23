@@ -329,8 +329,10 @@ import TrackingModal from '@/components/Modal/TrackingModal.vue'
 import CallLogsModal from '@/components/Modal/CallLogsModal.vue'
 import ReportModal from '@/components/Modal/ReportModal.vue'
 import debounce from 'lodash/debounce'
+import authMixin from '@/config/auth.js'
 
 export default {
+  mixins: [authMixin],
   components: {
     SearchFilter,
     Popover,
@@ -477,11 +479,11 @@ export default {
         this.$router.push({ query: this.params })
       })
     },
-    onLogout(close) {
-      // this.$auth.logout()
-      console.log('logout')
-      close()
-    },
+    // onLogout(close) {
+    //   removeItem('user')
+    //   this.$router.push({ path: '/login', name: 'login' })
+    //   close()
+    // },
     convertDate(date) {
       if (date == null || date == '') return '-'
       moment.locale('th')

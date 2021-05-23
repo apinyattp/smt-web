@@ -110,8 +110,10 @@ import SearchFilter from '@/components/SearchFilterList.vue'
 import Pagination from '@/components/Pagination.vue'
 import { HTTP } from '@/config/axios.js'
 import { getToken, getUserDetail } from '@/config/utils.js'
+import authMixin from '@/config/auth.js'
 
 export default {
+  mixins: [authMixin],
   components: {
     SearchFilter,
     Pagination,
