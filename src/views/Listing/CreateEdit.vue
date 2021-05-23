@@ -253,10 +253,12 @@ export default {
     let attrs = ['name', 'price', 'location', 'size', 'roomType', 'subway', 'map', 'description', 'original', 'line', 'author', 'tel', 'email', 'line', 'comeFrom', 'type', 'post_type'] 
     let schema = {}
     for(const attr of attrs) {
-      if(attr == 'email' || attr == 'author' || attr == 'line') {
+      if(attr == 'author' || attr == 'line' || attr == 'subway' || attr == 'location') {
+        schema[attr] = yup.string()
+      }else if(attr == 'email') {
         schema[attr] = yup.string().email()
       }else if(attr == 'map') {
-        schema[attr] = yup.string().url().required()
+        schema[attr] = yup.string().url()
       }else if(attr == 'tel') {
         schema[attr] = yup.number().positive().integer().min(9)
       }else{

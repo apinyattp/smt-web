@@ -168,7 +168,7 @@
             <td>
               <div class="">
                 {{
-                  !lists.dt
+                  lists.a_listing.created_at
                     ? convertDate(lists.a_listing.created_at)
                     : convertDate(lists.dt)
                 }}
