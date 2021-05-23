@@ -82,17 +82,28 @@
     @update:submitForm="submitForm($event)"
   ></search-filter>
   <h5 class="text-gold-300 mb-6">Listing</h5>
-  <div class="relative space-y-6">
-    <card
-      v-for="list in a_lists"
-      :key="list.id"
-      :items="list"
-      :type="es_type[list.t]"
-      :user_id="user_id"
-      @id-changed="viewData($event)"
-      @on-save="onAddList($event)"
-    ></card>
-  </div>
+  <template v-if="a_lists">
+    <div class="relative space-y-6">
+      <card
+        v-for="list in a_lists"
+        :key="list.id"
+        :items="list"
+        :type="es_type[list.t]"
+        :user_id="user_id"
+        @id-changed="viewData($event)"
+        @on-save="onAddList($event)"
+      ></card>
+    </div>
+  </template>
+  <template v-else>
+    <div class="w-full h-full fixed block top-0 left-0 bg-white opacity-75 z-50">
+        <span class="animate-spin text-green-500 opacity-75 top-1/2 my-0 mx-auto block relative w-0 h-0" style="
+          top: 50%;
+        ">
+          <span class="relative inline-flex rounded-full h-10 w-10 bg-gray-500"></span>
+        </span>
+    </div>
+  </template>
   <pagination
     class="mt-10 mb-40"
     :per-page="parseInt(params.perpage)"
@@ -254,11 +265,14 @@ export default {
         postType: items.type_agent ? items.type_agent : '',
         comeform: items.s
       }).then((response) => {
-        this.$router.push({
-          name: 'listing-edit',
-          params: { id: items.id }
-        })
-        // window.location = '/listing'
+        if(items.is_listing == 0) {
+          this.$router.push({
+            name: 'listing-edit',
+            params: { id: items.id }
+          })
+        }else{
+          window.location = '/listing'
+        }
       })
     }
   }

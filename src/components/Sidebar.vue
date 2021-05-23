@@ -13,7 +13,7 @@
       <div class="text-gold-500 font-medium">
         <ul class="space-y-10">
           <li v-for="{ icon, label, to } in sidebarMenus" :key="icon">
-            <router-link class="flex items-center space-x-4" :to="to">
+            <router-link class="flex items-center space-x-4" :to="to" :target="label=='Contact' ? '_blank' : ''">
               <vue-feather size="22" :type="icon" />
               <span>{{ label }}</span>
             </router-link>
