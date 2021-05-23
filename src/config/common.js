@@ -12,6 +12,7 @@ export default {
             })
         },
         setOptionSwap(items) {
+            delete items['facebook_page']
             return Object.keys(items).map((item) => {
                 return {
                 value: items[item],

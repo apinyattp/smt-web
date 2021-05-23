@@ -4,11 +4,17 @@
       <div class="flex items-center h-40">
         <div class="container mx-auto flex items-center">
           <div class="flex-grow">
-            <router-link
+            <a
+              class="text-lg text-gold-500 font-bold underline"
+              href="/saved-list"
+            >
+              Back
+            </a>
+            <!-- <router-link
               class="text-lg text-gold-500 font-bold underline"
               :to="{ name: 'saved-list' }"
               >Back</router-link
-            >
+            > -->
             <div class="text-xl text-gray-200 mt-3">แก้ไขโครงการ</div>
           </div>
           <button class="btn-primary p-3 rounded w-1/5" type="submit">
@@ -244,15 +250,15 @@ export default {
     const router = useRouter()
     const route = useRoute()
 
-    let attrs = ['name', 'price', 'location', 'size', 'roomType', 'subway', 'map', 'description', 'original', 'author', 'tel', 'email', 'line', 'comeFrom', 'type', 'post_type'] 
+    let attrs = ['name', 'price', 'location', 'size', 'roomType', 'subway', 'map', 'description', 'original', 'line', 'author', 'tel', 'email', 'line', 'comeFrom', 'type', 'post_type'] 
     let schema = {}
     for(const attr of attrs) {
-      if(attr == 'email') {
-        schema[attr] = yup.string().email().required()
+      if(attr == 'email' || attr == 'author' || attr == 'line') {
+        schema[attr] = yup.string().email()
       }else if(attr == 'map') {
         schema[attr] = yup.string().url().required()
       }else if(attr == 'tel') {
-        schema[attr] = yup.number().required().positive().integer().min(9)
+        schema[attr] = yup.number().positive().integer().min(9)
       }else{
         schema[attr] = yup.string().required()
       }
@@ -377,7 +383,7 @@ export default {
       this.roomType = a_hilight.number_bedroom ? a_hilight.number_bedroom.join(', ') : mapPredict.number_bedroom,
       this.subway = a_hilight.station ? a_hilight.station.join(', ') : mapPredict.station,
       this.post_type = a_listing_obj.post_type,
-      this.author = a_listing_obj.name,
+      this.author = a_listing_obj.name ? a_listing_obj.name : this.name,
       this.tel = a_listing_obj.tel,
       this.email = a_listing_obj.email,
       this.line = a_listing_obj.line_id
@@ -401,7 +407,6 @@ export default {
       },
       sourceList: {
         facebook_group: 'fb_g',
-        facebook_page: 'fb_p',
         baan_kaidee: 'baan.kaidee',
         line: 'line',
         zmyhome: 'zmyhome'
