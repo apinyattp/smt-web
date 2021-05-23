@@ -13,7 +13,7 @@
             class="btn-primary py-4 rounded-full"
             @click.prevent="onFacebookLogin"
           >
-            Log in with Facebook
+            Log in with Facebooks
           </button>
           <button
             class="btn-primary py-4 rounded-full"
