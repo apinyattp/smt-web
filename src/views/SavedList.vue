@@ -154,7 +154,16 @@
       <thead>
         <tr>
           <th>วันที่สร้าง</th>
-          <th>วันที่แก้ไข</th>
+          <th>
+            วันที่แก้ไข
+            <!-- <button class="focus:outline-none" @click="sortData('updated_at')">
+              <vue-feather
+                stroke-width="1"
+                :type="params.sortFav.updated_at == 'desc' ? 'chevron-up' : 'chevron-down'"
+                size="20"
+              ></vue-feather>
+            </button> -->
+          </th>
           <th>ชื่อโครงการ</th>
           <th>ประเภท</th>
           <th>เจ้าของ</th>
@@ -406,6 +415,9 @@ export default {
         user_id_list: '',
         type: '',
         sort: 'date_desc',
+        sortFav: {
+          updated_at: 'desc'
+        },
         comeFrom: '',
         page: 1,
         perpage: 25,
@@ -691,6 +703,10 @@ export default {
       const a_hilight = items.a_listing.hilight ? JSON.parse(items.a_listing.hilight) : []
       let hilight_name = a_hilight[name] ? a_hilight[name].join(', ') : predict_name
       return hilight_name ? hilight_name : '-'
+    },
+    sortData(type) {
+      this.params.sortFav[type] = this.params.sortFav[type] == 'asc' ? 'desc' : 'asc'
+      this.fetchData()
     }
   }
 }
