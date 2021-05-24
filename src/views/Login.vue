@@ -33,6 +33,13 @@ import router from '@/router'
 import { HTTP } from '@/config/axios.js'
 export default {
   name: 'SocialLogin',
+  data() {
+    return {
+      params: {
+        scope: 'email'
+      }
+    }
+  },
   mounted() {
     initFbsdk()
   },
