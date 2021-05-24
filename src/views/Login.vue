@@ -36,7 +36,8 @@ export default {
   data() {
     return {
       params: {
-        scope: 'email'
+        scope: 'email',
+        return_scopes: true
       }
     }
   },
