@@ -154,6 +154,7 @@
       <thead>
         <tr>
           <th>วันที่สร้าง</th>
+          <th>วันที่แก้ไข</th>
           <th>ชื่อโครงการ</th>
           <th>ประเภท</th>
           <th>เจ้าของ</th>
@@ -175,6 +176,16 @@
                 }}
               </div>
               <div class="text-sm text-gold-500">{{allUser[lists.a_listing.user_update_id]}}</div>
+            </td>
+            <td>
+              <div class="">
+                {{
+                  lists.a_listing.updated_at
+                    ? convertDate(lists.a_listing.updated_at)
+                    : '-'
+                }}
+              </div>
+              <div class="text-sm text-gold-500">นายเอ</div>
             </td>
             <td>
               <div class="text-gold-200">
