@@ -153,16 +153,25 @@
     <table class="my-saved-list-table table-auto border-collapse w-full">
       <thead>
         <tr>
-          <th>วันที่สร้าง</th>
           <th>
-            วันที่แก้ไข
-            <!-- <button class="focus:outline-none" @click="sortData('updated_at')">
+            วันที่สร้าง
+            <button class="focus:outline-none" @click="sortData('created_at')">
               <vue-feather
                 stroke-width="1"
-                :type="params.sortFav.updated_at == 'desc' ? 'chevron-up' : 'chevron-down'"
+                :type="params.sortFav.created_at == 'desc' ? 'chevron-down' : 'chevron-up'"
                 size="20"
               ></vue-feather>
-            </button> -->
+            </button>
+          </th>
+          <th>
+            วันที่แก้ไข
+            <button class="focus:outline-none" @click="sortData('updated_at')">
+              <vue-feather
+                stroke-width="1"
+                :type="params.sortFav.updated_at == 'desc' ? 'chevron-down' : 'chevron-up'"
+                size="20"
+              ></vue-feather>
+            </button>
           </th>
           <th>ชื่อโครงการ</th>
           <th>ประเภท</th>
@@ -416,7 +425,7 @@ export default {
         type: '',
         sort: 'date_desc',
         sortFav: {
-          updated_at: 'desc'
+          created_at: 'desc'
         },
         comeFrom: '',
         page: 1,
@@ -705,7 +714,12 @@ export default {
       return hilight_name ? hilight_name : '-'
     },
     sortData(type) {
-      this.params.sortFav[type] = this.params.sortFav[type] == 'asc' ? 'desc' : 'asc'
+      if(type == 'created_at') {
+        delete this.params.sortFav['updated_at']
+      }else{
+        delete this.params.sortFav['created_at']
+      }
+      this.params.sortFav[type] = this.params.sortFav[type] == 'desc' ? 'asc' : 'desc'
       this.fetchData()
     }
   }
