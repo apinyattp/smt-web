@@ -9,7 +9,16 @@
         @update:modelValue="selectDate($event)"
       ></datepicker>
     </div>
-    <div class="w-1/3 px-2 py-3">
+    <div class="w-1/5 px-2 py-3">
+      <base-select
+        v-model="params.user_id_list"
+        :options="setOption(teamsList)"
+        label="เพื่อนร่วมทีม"
+        :model-value="params.user_id_list"
+        @update:modelValue="params.user_id_list = $event"
+      ></base-select>
+    </div>
+    <div class="w-1/5 px-2 py-3">
       <base-select
         v-model="params.type"
         :options="setOption(contentType)"
@@ -18,7 +27,7 @@
         @update:modelValue="params.type = $event"
       ></base-select>
     </div>
-    <div class="w-1/3 px-2 py-3">
+    <div class="w-1/4 px-2 py-3">
       <base-select
         v-model="params.comeFrom"
         label="แหล่งที่มา"
@@ -111,6 +120,10 @@ export default {
       default: () => {}
     },
     defaultForm: {
+      type: Object,
+      default: () => {}
+    },
+    teamsList: {
       type: Object,
       default: () => {}
     }

@@ -136,6 +136,7 @@
     :content-tel-list="contentTelList"
     :sale-staus-list="saleStatusList"
     :search-form="params"
+    :teams-list="allUser"
     @update:submitForm="submitForm($event)"
   ></search-filter>
   <div class="flex justify-between items-center mb-6">
@@ -503,8 +504,9 @@ export default {
         this.es_type = response.data.es_type
         this.sourceList = { ...this.sourceList, ...response.data.es_source }
         this.total = response.data.total
-        this.allUser = response.data.team
+        this.allUser[''] = 'All'
         this.allUser[response.data.admin_id] = this.userDetail.name
+        this.allUser = {...this.allUser, ...response.data.team }
         this.statusFeed = 'success'
       })
     },
