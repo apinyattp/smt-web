@@ -288,11 +288,11 @@ export default {
 
     const onSubmit = handleSubmit(submitData => {
       const a_entity = {
-        price: submitData.price.split(','),
-        location: submitData.location.split(','),
-        name: submitData.name.split(','),
-        size: submitData.size.split(','),
-        number_bedroom: submitData.roomType.split(','),
+        price: submitData.price ? submitData.price.split(',') : '',
+        location: submitData.location ? submitData.location.split(',') : '',
+        name: submitData.name ? submitData.name.split(',') : '',
+        size: submitData.size ? submitData.size.split(',') : '',
+        number_bedroom: submitData.roomType ? submitData.roomType.split(',') : '',
         investment: [],
         buy_phase: [],
         sell_phase: [],
@@ -301,19 +301,19 @@ export default {
         sell_rentout_phase: [],
         is_owner: [],
         soi: [],
-        station: submitData.subway.split(','),
+        station: submitData.subway ? submitData.subway.split(','): '',
       }
 
       const params = {
         token: props.token,
         content: submitData.description,
-        url: submitData.original,
+        url: submitData.original ? submitData.original : '',
         type: submitData.type,
-        name: submitData.author,
-        tel: submitData.tel,
-        email: submitData.email,
-        line_id: submitData.line,
-        map: submitData.map
+        name: submitData.author ? submitData.author : '',
+        tel: submitData.tel ? submitData.tel : '',
+        email: submitData.email ? submitData.email : '',
+        line_id: submitData.line ? submitData.line : '',
+        map: submitData.map ? submitData.map : ''
       }
 
       let urlPath = 'addDataListing'
