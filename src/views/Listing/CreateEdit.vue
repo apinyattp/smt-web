@@ -260,7 +260,7 @@ export default {
       }else if(attr == 'map') {
         schema[attr] = yup.string().url()
       }else if(attr == 'tel') {
-        schema[attr] = yup.number().positive().integer().min(9)
+        schema[attr] = yup.number().positive().integer().min(9).nullable(true)
       }else{
         schema[attr] = yup.string().required()
       }
@@ -373,21 +373,21 @@ export default {
         subway : a_predict.station ? a_predict.station.join(', ') : '',
       }
 
-      this.type = a_listing_obj.t ? a_listing_obj.t : '',
-      this.comeFrom = a_listing_obj.s ? a_listing_obj.s : '',
-      this.map = a_listing_obj.map,
-      this.description = to.a_listing.content,
-      this.original = a_listing_obj.u,
-      this.name = a_hilight.name ? a_hilight.name.join(', ') : mapPredict.name,
-      this.location = a_hilight.location ? a_hilight.location.join(', ') : mapPredict.location,
-      this.price = a_hilight.price ? a_hilight.price.join(', ') : mapPredict.price,
-      this.size = a_hilight.size ? a_hilight.size.join(', ') : mapPredict.size,
-      this.roomType = a_hilight.number_bedroom ? a_hilight.number_bedroom.join(', ') : mapPredict.number_bedroom,
-      this.subway = a_hilight.station ? a_hilight.station.join(', ') : mapPredict.station,
-      this.post_type = a_listing_obj.post_type,
-      this.author = a_listing_obj.name ? a_listing_obj.name : this.name,
-      this.tel = a_listing_obj.tel,
-      this.email = a_listing_obj.email,
+      this.type = a_listing_obj.t ? a_listing_obj.t : ''
+      this.comeFrom = a_listing_obj.s ? a_listing_obj.s : ''
+      this.map = a_listing_obj.map
+      this.description = to.a_listing.content
+      this.original = a_listing_obj.u
+      this.name = a_hilight.name ? a_hilight.name.join(', ') : mapPredict.name
+      this.location = a_hilight.location ? a_hilight.location.join(', ') : mapPredict.location
+      this.price = a_hilight.price ? a_hilight.price.join(', ') : mapPredict.price
+      this.size = a_hilight.size ? a_hilight.size.join(', ') : mapPredict.size
+      this.roomType = a_hilight.number_bedroom ? a_hilight.number_bedroom.join(', ') : mapPredict.roomType
+      this.subway = a_hilight.station ? a_hilight.station.join(', ') : mapPredict.subway
+      this.post_type = a_listing_obj.post_type
+      this.author = a_listing_obj.name ? a_listing_obj.name : this.name
+      this.tel = a_listing_obj.tel ? a_listing_obj.tel : null
+      this.email = a_listing_obj.email
       this.line = a_listing_obj.line_id
       this.a_images = to.a_images
     }
@@ -431,6 +431,9 @@ export default {
       HTTP.get('api/property/highlight/getListingId', {
         params: this.params
       }).then((response) => {
+        if(this.isEdit && response.data.status == 'fail') {
+          router.push({ name: 'saved-list' })
+        }
         this.result = response.data.data
       })
     },

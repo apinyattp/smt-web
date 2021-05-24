@@ -185,15 +185,15 @@
                     : '-'
                 }}
               </div>
-              <div class="text-sm text-gold-500">นายเอ</div>
+              <div class="text-sm text-gold-500">{{allUser[lists.a_listing.user_edit_id]}}</div>
             </td>
             <td>
               <div class="text-gold-200">
-                {{ lists.a_predict.name ? lists.a_predict.name[0] : '-' }}
+                {{ getDetailName(lists, 'name') }}
               </div>
               <div class="text-sm text-gray-200">
                 {{
-                  lists.a_predict.location ? lists.a_predict.location[0] : ''
+                  getDetailName(lists, 'location')
                 }}
               </div>
             </td>
@@ -684,6 +684,13 @@ export default {
       }
       this.idCurrent = id
       this[dataSetName + 'ModalShow'] = true
+    },
+    getDetailName(items, name) {
+      const a_predict = items.a_predict
+      const predict_name = a_predict[name] ? a_predict[name].join(', ') : ''
+      const a_hilight = items.a_listing.hilight ? JSON.parse(items.a_listing.hilight) : []
+      let hilight_name = a_hilight[name] ? a_hilight[name].join(', ') : predict_name
+      return hilight_name ? hilight_name : '-'
     }
   }
 }
