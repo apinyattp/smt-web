@@ -6,7 +6,7 @@ export default {
     methods: {
         onLogout(close) {
             removeItem('user')
-            this.$router.push({ path: '/login', name: 'login' })
+            window.location = '/login'
             close()
         }
     }
