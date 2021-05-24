@@ -15,7 +15,7 @@
               :to="{ name: 'saved-list' }"
               >Back</router-link
             > -->
-            <div class="text-xl text-gray-200 mt-3">แก้ไขโครงการ</div>
+            <div class="text-xl text-gray-200 mt-3">{{isEdit ? 'แก้ไข' : 'เพิ่ม'}}โครงการ</div>
           </div>
           <button class="btn-primary p-3 rounded w-1/5" type="submit">
             บันทึกข้อมูล
