@@ -185,7 +185,7 @@
                     : '-'
                 }}
               </div>
-              <div class="text-sm text-gold-500">{{allUser[lists.a_listing.user_edit_id]}}</div>
+              <div class="text-sm text-gold-500">{{allUser[lists.a_listing.user_edit_id] == 'All' ? allUser[lists.a_listing.user_update_id]  : allUser[lists.a_listing.user_edit_id] }}</div>
             </td>
             <td>
               <div class="text-gold-200">
