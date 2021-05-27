@@ -64,14 +64,16 @@
       ></base-select>
     </div>
 
-    <div class="flex w-1/4 px-2 py-3 items-end">
-      <div class="flex space-x-2">
+    <div class="flex flex-grow px-2 py-3 items-end">
+      <div class="flex w-full space-x-2">
         <button
-          class="btn-secondary rounded py-2 px-6"
+          class="btn-secondary rounded py-2 px-6 flex-1"
           @click="clearData"
-        >ล้างข้อมูล</button>
+        >
+          ล้างข้อมูล
+        </button>
         <button
-          class="btn-primary rounded py-2 px-6"
+          class="btn-primary rounded py-2 px-6 flex-1"
           @click="searchData(params)"
         >
           ตกลง
@@ -89,11 +91,11 @@ import myMixin from '@/config/common.js'
 // import 'flatpickr/dist/themes/dark.css'
 
 export default {
-  mixins: [myMixin],
   components: {
     BaseSelect,
     Datepicker
   },
+  mixins: [myMixin],
   props: {
     saleStausList: {
       type: Object,
@@ -132,7 +134,7 @@ export default {
   data() {
     return {
       config: {
-        mode: "range",
+        mode: 'range',
         altInputClass: 'invisible',
         wrap: true, // set wrap to true only when using 'input-group'
         altFormat: 'M j, Y',

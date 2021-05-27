@@ -14,11 +14,9 @@
         :type="prefixIcon"
       ></vue-feather>
       <span class="font-medium text-lg">{{ selectedLabel }}</span>
-      <vue-feather
-        class="ml-auto"
-        type="chevron-down"
-        stroke-width="1"
-      ></vue-feather>
+      <caret-down
+        class="caret-icon transform h-4 w-4 transition duration-300 ml-auto"
+      />
     </div>
     <div
       class="relative opacity-0 invisible dropdown-menu transition-all transform origin-top -translate-y-2 scale-95 z-10"
@@ -44,7 +42,12 @@
 </template>
 
 <script>
+import CaretDown from '../Icons/CaretDown.vue'
+
 export default {
+  components: {
+    CaretDown
+  },
   props: {
     prefixIcon: {
       type: String,
@@ -112,6 +115,13 @@ export default {
   --tw-border-opacity: 1;
   border-color: rgba(220, 38, 38, var(--tw-border-opacity));
 }
+
+.dropdown:focus-within {
+  .caret-icon {
+    transform: rotate(180deg);
+  }
+}
+
 .dropdown:focus-within .dropdown-menu {
   opacity: 1;
   transform: translate(0) scale(1);

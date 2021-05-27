@@ -52,5 +52,35 @@ module.exports = {
       backgroundColor: ['active']
     }
   },
-  plugins: [require('@tailwindcss/forms'), require('@tailwindcss/line-clamp')]
+  // temporary workaround with container size
+  corePlugins: {
+    container: false
+  },
+  plugins: [
+    require('@tailwindcss/forms'),
+    require('@tailwindcss/line-clamp'),
+    // temporary workaround with container size
+    function ({ addComponents, config }) {
+      addComponents({
+        '.container': {
+          width: config('theme.width.full'),
+          '@screen sm': {
+            maxWidth: '640px'
+          },
+          '@screen md': {
+            maxWidth: '768px'
+          },
+          '@screen lg': {
+            maxWidth: '1024px'
+          },
+          '@screen xl': {
+            maxWidth: '1280px'
+          },
+          '@screen 2xl': {
+            maxWidth: '1400px'
+          }
+        }
+      })
+    }
+  ]
 }

@@ -2,8 +2,9 @@ import VueFeather from 'vue-feather'
 import Card from '@/components/Card.vue'
 import BaseSelect from '@/components/Forms/BaseSelect.vue'
 
-import DefaultLayout from '../layouts/Default.vue'
-import BlankLayout from '../layouts/Blank.vue'
+import DefaultLayout from '@/layouts/Default.vue'
+import BlankLayout from '@/layouts/Blank.vue'
+import LoadingOverlay from '@/components/LoadingOverlay.vue'
 
 export default {
   install: (app) => {
@@ -13,5 +14,6 @@ export default {
 
     app.component('Default', DefaultLayout)
     app.component('Blank', BlankLayout)
+    app.component('LoadingOverlay', LoadingOverlay)
   }
 }

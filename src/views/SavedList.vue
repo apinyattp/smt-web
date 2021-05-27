@@ -149,28 +149,40 @@
       <span class="ml-2">สร้าง Listing ใหม่</span>
     </router-link>
   </div>
-  <div class="table-wrapper rounded-lg mb-12">
+  <div class="table-wrapper w-full rounded-lg mb-12">
     <table class="my-saved-list-table table-auto border-collapse w-full">
       <thead>
         <tr>
           <th>
-            วันที่สร้าง
-            <button class="focus:outline-none" @click="sortData('created_at')">
-              <vue-feather
-                stroke-width="1"
-                :type="params.sortFav.created_at == 'desc' ? 'chevron-down' : 'chevron-up'"
-                size="20"
-              ></vue-feather>
+            <button
+              class="flex items-center focus:outline-none font-medium mx-auto"
+              @click="sortData('created_at')"
+            >
+              <span>วันที่สร้าง</span>
+              <caret-down
+                class="h-4 w-4 ml-2 transform transition-transform duration-300"
+                :class="
+                  params.sortFav.created_at == 'desc'
+                    ? 'chevron-down'
+                    : '-rotate-180'
+                "
+              />
             </button>
           </th>
           <th>
-            วันที่แก้ไข
-            <button class="focus:outline-none" @click="sortData('updated_at')">
-              <vue-feather
-                stroke-width="1"
-                :type="params.sortFav.updated_at == 'desc' ? 'chevron-down' : 'chevron-up'"
-                size="20"
-              ></vue-feather>
+            <button
+              class="flex items-center focus:outline-none font-medium mx-auto"
+              @click="sortData('updated_at')"
+            >
+              <span>วันที่แก้ไข</span>
+              <caret-down
+                class="h-4 w-4 ml-2 transform transition-transform duration-300"
+                :class="
+                  params.sortFav.updated_at == 'desc'
+                    ? 'chevron-down'
+                    : '-rotate-180'
+                "
+              />
             </button>
           </th>
           <th>ชื่อโครงการ</th>
@@ -184,72 +196,83 @@
       </thead>
       <tbody>
         <template v-if="statusFeed">
-          <tr v-for="lists in a_lists" :key="lists">
+          <tr v-for="item in a_lists" :key="item" class="text-sm">
             <td>
               <div class="">
                 {{
-                  lists.a_listing.created_at
-                    ? convertDate(lists.a_listing.created_at)
-                    : convertDate(lists.dt)
+                  item.a_listing.created_at
+                    ? convertDate(item.a_listing.created_at)
+                    : convertDate(item.dt)
                 }}
               </div>
-              <div class="text-sm text-gold-500">{{allUser[lists.a_listing.user_update_id]}}</div>
+              <div class="text-xs text-gold-500">
+                {{ allUser[item.a_listing.user_update_id] }}
+              </div>
             </td>
             <td>
               <div class="">
                 {{
-                  lists.a_listing.updated_at
-                    ? convertDate(lists.a_listing.updated_at)
+                  item.a_listing.updated_at
+                    ? convertDate(item.a_listing.updated_at)
                     : '-'
                 }}
               </div>
-              <div class="text-sm text-gold-500">{{allUser[lists.a_listing.user_edit_id] == 'All' ? allUser[lists.a_listing.user_update_id]  : allUser[lists.a_listing.user_edit_id] }}</div>
-            </td>
-            <td>
-              <div class="text-gold-200">
-                {{ getDetailName(lists, 'name') }}
-              </div>
-              <div class="text-sm text-gray-200">
+              <div class="text-xs text-gold-500">
                 {{
-                  getDetailName(lists, 'location')
+                  allUser[item.a_listing.user_edit_id] == 'All'
+                    ? allUser[item.a_listing.user_update_id]
+                    : allUser[item.a_listing.user_edit_id]
                 }}
               </div>
             </td>
-            <td class="">{{ filterType(lists.obj.t) }}</td>
-            <td class="text-center">
-              {{ !lists.obj.name ? '-' : lists.obj.name }}
+            <td>
+              <div class="text-gold-200 text-base">
+                {{ getDetailName(item, 'name') }}
+              </div>
+              <div class="text-gray-200">
+                {{ getDetailName(item, 'location') }}
+              </div>
+            </td>
+            <td class="text-center whitespace-nowrap">
+              {{ filterType(item.obj.t) }}
             </td>
             <td class="text-center">
-              {{ convertDate(lists.lastest_call_log) }}
+              {{ !item.obj.name ? '-' : item.obj.name }}
             </td>
-            <td class="text-center">
-              {{ convertSale(lists.a_listing.saleStatus) }}
+            <td class="text-center whitespace-nowrap">
+              {{ convertDate(item.lastest_call_log) }}
             </td>
-            <td class="text-center">
-              {{ convertDate(lists.a_listing.appointment) }}
+            <td class="text-center whitespace-nowrap">
+              <span :class="getSaleStatusClasses(item)">{{
+                convertSale(item.a_listing.saleStatus)
+              }}</span>
+            </td>
+            <td class="text-center whitespace-nowrap">
+              {{ convertDate(item.a_listing.appointment) }}
               <!-- <vue-feather
               class=""
               stroke-width="1"
               type="clipboard"
             ></vue-feather> -->
             </td>
-            <td>
-              <div class="flex space-x-3">
+            <td class="w-px">
+              <div class="flex space-y-2 flex-col">
                 <popover>
-                  <template #default="{ isOpen, close, open }">
-                    <div class="flex flex-col items-center relative">
+                  <template #default="{ isOpen, toggler, close }">
+                    <div
+                      v-click-outside="close"
+                      class="flex flex-col items-center relative"
+                      @click="toggler"
+                    >
                       <button
-                        class="btn bg-gray-500 rounded-full py-3 px-6 hover:bg-gray-400 active:bg-gray-500"
-                        @focusout="close"
-                        @focusin="open"
+                        class="btn bg-gray-500 rounded-lg py-2 px-3 hover:bg-gray-400 active:bg-gray-500"
                       >
-                        <div class="flex items-center">
+                        <div class="flex items-center justify-center">
                           <span class="mr-2">จัดการ</span>
-                          <vue-feather
-                            stroke-width="1"
-                            type="chevron-down"
-                            size="20"
-                          ></vue-feather>
+                          <caret-down
+                            class="transform h-4 w-4 transition duration-300"
+                            :class="{ '-rotate-180': isOpen }"
+                          />
                         </div>
                       </button>
                       <transition appear name="slide-fade" mode="out-in">
@@ -260,7 +283,7 @@
                           <router-link
                             :to="{
                               name: 'listing-edit',
-                              params: { id: lists.id }
+                              params: { id: item.id }
                             }"
                             >แก้ไขข้อมูล</router-link
                           >
@@ -269,8 +292,8 @@
                             @click="
                               setDataModalStatus(
                                 'status',
-                                lists.a_listing.saleStatus,
-                                lists.id
+                                item.a_listing.saleStatus,
+                                item.id
                               )
                             "
                           >
@@ -281,8 +304,8 @@
                             @click="
                               setDataModalStatus(
                                 'tracking',
-                                lists.a_listing.appointment,
-                                lists.id
+                                item.a_listing.appointment,
+                                item.id
                               )
                             "
                           >
@@ -290,7 +313,7 @@
                           </div>
                           <div
                             class="cursor-pointer"
-                            @click="setDataModalStatus('report', '', lists.id)"
+                            @click="setDataModalStatus('report', '', item.id)"
                           >
                             รายงาน/ปรับปรุง
                           </div>
@@ -300,10 +323,10 @@
                   </template>
                 </popover>
                 <button
-                  class="btn bg-gray-500 rounded-full py-3 px-6 hover:bg-gray-400 active:bg-gray-500"
-                  @click="toggleCallLogsModal(lists)"
+                  class="btn bg-gray-500 rounded-lg py-2 px-3 hover:bg-gray-400 active:bg-gray-500"
+                  @click="toggleCallLogsModal(item)"
                 >
-                  <div class="flex items-center">
+                  <div class="flex items-center justify-center">
                     <span class="mr-2">ข้อมูล</span>
                     <vue-feather
                       stroke-width="1"
@@ -316,15 +339,7 @@
             </td>
           </tr>
         </template>
-        <template v-else>
-          <div class="w-full h-full fixed block top-0 left-0 bg-white opacity-75 z-50">
-              <span class="animate-spin text-green-500 opacity-75 top-1/2 my-0 mx-auto block relative w-0 h-0" style="
-                top: 50%;
-              ">
-                <span class="relative inline-flex rounded-full h-10 w-10 bg-gray-500"></span>
-              </span>
-          </div>
-        </template>
+        <loading-overlay :is-loading="!statusFeed"></loading-overlay>
       </tbody>
     </table>
   </div>
@@ -378,6 +393,8 @@ import ReportModal from '@/components/Modal/ReportModal.vue'
 import debounce from 'lodash/debounce'
 import authMixin from '@/config/auth.js'
 import commonMixin from '@/config/common.js'
+import CaretDown from '@/components/Icons/CaretDown.vue'
+import { toRaw } from 'vue'
 
 export default {
   components: {
@@ -387,7 +404,8 @@ export default {
     StatusModal,
     TrackingModal,
     CallLogsModal,
-    ReportModal
+    ReportModal,
+    CaretDown
   },
   directives: { clickOutside },
   mixins: [authMixin, commonMixin],
@@ -538,14 +556,14 @@ export default {
         this.total = response.data.total
         this.allUser[''] = 'All'
         this.allUser[response.data.admin_id] = this.userDetail.name
-        this.allUser = {...this.allUser, ...response.data.team }
+        this.allUser = { ...this.allUser, ...response.data.team }
         this.statusFeed = 'success'
       })
     },
     convertDate(date) {
       if (date == null || date == '') return '-'
       moment.locale('th')
-      return moment(date).add(543, 'year').format('ll')
+      return moment(date).add(543, 'year').format('DD MMM YY')
     },
     filterType(type) {
       if (type == null || type == '') return '-'
@@ -559,11 +577,25 @@ export default {
       if (type == 'sold') return 'ขายแล้ว'
       return 'ว่าง'
     },
+    getSaleStatusClasses({ a_listing: { saleStatus } }) {
+      switch (saleStatus) {
+        case 'cancel':
+          return 'text-red'
+        case 'sold':
+          return 'text-green'
+        default:
+          return ''
+      }
+    },
     submitForm(params) {
+      const sortFav = JSON.stringify(this.params.sortFav)
       let query = this.$route.query
       this.params = { ...query, ...params }
       delete this.params['token']
-      this.$router.replace({ name: 'saved-list', query: this.params })
+      this.$router.replace({
+        name: 'saved-list',
+        query: { ...this.params, sortFav }
+      })
     },
     closeCallLogsModal(result) {
       this.callLogsModalShow = false
@@ -709,17 +741,22 @@ export default {
     getDetailName(items, name) {
       const a_predict = items.a_predict
       const predict_name = a_predict[name] ? a_predict[name].join(', ') : ''
-      const a_hilight = items.a_listing.hilight ? JSON.parse(items.a_listing.hilight) : []
-      let hilight_name = a_hilight[name] ? a_hilight[name].join(', ') : predict_name
+      const a_hilight = items.a_listing.hilight
+        ? JSON.parse(items.a_listing.hilight)
+        : []
+      let hilight_name = a_hilight[name]
+        ? a_hilight[name].join(', ')
+        : predict_name
       return hilight_name ? hilight_name : '-'
     },
     sortData(type) {
-      if(type == 'created_at') {
+      if (type == 'created_at') {
         delete this.params.sortFav['updated_at']
-      }else{
+      } else {
         delete this.params.sortFav['created_at']
       }
-      this.params.sortFav[type] = this.params.sortFav[type] == 'desc' ? 'asc' : 'desc'
+      this.params.sortFav[type] =
+        this.params.sortFav[type] == 'desc' ? 'asc' : 'desc'
       this.fetchData()
     }
   }
@@ -733,7 +770,7 @@ table.my-saved-list-table {
     @apply font-medium text-gold-600 py-5;
   }
   tbody > tr > td {
-    @apply py-5 px-6 text-gray-200;
+    @apply py-5 px-4 text-gray-200;
   }
   tbody > tr:nth-child(even) {
     background: rgba(#5a5b63, 0.25);

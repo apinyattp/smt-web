@@ -9,14 +9,12 @@
             class="flex flex-col items-center relative"
             @click="toggler"
           >
-            <button class="text-gold-400 flex items-center">
+            <button class="text-gold-400 flex items-center focus:outline-none">
               {{ perPage }}
-              <vue-feather
-                size="16"
-                class="ml-1"
-                stroke-width="4"
-                type="chevron-down"
-              ></vue-feather>
+              <caret-down
+                class="transform h-4 w-4 transition duration-300 ml-1"
+                :class="{ '-rotate-180': isOpen }"
+              />
             </button>
             <transition appear name="slide-fade" mode="out-in">
               <div
@@ -90,12 +88,14 @@
 </template>
 
 <script>
+import CaretDown from '@/components/Icons/CaretDown.vue'
 import Popover from './Popover'
 import { clickOutside } from '../plugins/directives'
 
 export default {
   components: {
-    Popover
+    Popover,
+    CaretDown
   },
   directives: { clickOutside },
   props: {

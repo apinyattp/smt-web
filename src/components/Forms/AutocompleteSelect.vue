@@ -1,61 +1,59 @@
 <template>
-    <popover>
-      <template #default="{ isOpen, open, close }">
-        <div v-click-outside="close" class="w-1/3 relative">
-          <div>
-            <div class="absolute inset-y-0 left-0 flex items-center pl-6">
-              <vue-feather
-                class="text-gold-500"
-                stroke-width="2"
-                size="18"
-                type="search"
-              ></vue-feather>
-            </div>
-            <input
-              v-model="selected"
-              type="text"
-              class="font-medium block w-full py-4 pl-14 pr-12 sm:text-sm border-gray-300 rounded-full bg-dark-700 placeholder-gold-500 focus:border-gold-300 focus:ring-0 transition-colors duration-200 ease-in-out text-gold-300"
-              :placeholder="label"
-              @click="open"
-              @input="onSearchChange"
-            />
+  <popover>
+    <template #default="{ isOpen, open, close }">
+      <div v-click-outside="close" class="w-1/3 relative">
+        <div>
+          <div class="absolute inset-y-0 left-0 flex items-center pl-6">
+            <vue-feather
+              class="text-gold-500"
+              stroke-width="2"
+              size="18"
+              type="search"
+            ></vue-feather>
           </div>
-          <transition appear name="slide-fade" mode="out-in">
-            <div
-              v-if="isOpen && isSearchResultShow"
-              class="w-full bg-gray-600 absolute top-full mt-2 bg-white border border-gold-300 divide-y divide-gray-100 rounded-md shadow-lg outline-none z-10"
-            >
-              <div class="py-1 autocomplete-container">
-                <template v-if="itemsList.length">
-                  <div
-                    v-for="items in itemsList"
-                    :key="items[labelKey]"
-                    class="text-gold-300 w-full px-4 py-3 text-sm leading-5 text-left cursor-pointer font-medium hover:bg-dark-600 transition ease-in-out focus:bg-dark-500"
-                    @click="onDataSelect(items, close)"
-                  >
-                    {{ items[labelName] }}
-                  </div>
-                </template>
-                <template v-else>
-                  <div
-                    class="text-gold-300 px-4 py-3 text-sm leading-5 text-center"
-                  >
-                    <template v-if="isSearching"
-                      >searching "{{ selected }}"</template
-                    >
-                    <template
-                      v-else-if="isSearched && !isSearching"
-                    >
-                      "{{ selected }}" did not match any "{{ label }}".
-                    </template>
-                  </div>
-                </template>
-              </div>
-            </div>
-          </transition>
+          <input
+            v-model="selected"
+            type="text"
+            class="font-medium block w-full py-4 pl-14 pr-12 sm:text-sm border-gray-300 rounded-full bg-dark-700 placeholder-gold-500 focus:border-gold-300 focus:ring-0 transition-colors duration-200 ease-in-out text-gold-300"
+            :placeholder="label"
+            @click="open"
+            @input="onSearchChange"
+          />
         </div>
-      </template>
-    </popover>
+        <transition appear name="slide-fade" mode="out-in">
+          <div
+            v-if="isOpen && isSearchResultShow"
+            class="w-full bg-gray-600 absolute top-full mt-2 bg-white border border-gold-300 divide-y divide-gray-100 rounded-md shadow-lg outline-none z-10"
+          >
+            <div class="py-1 autocomplete-container">
+              <template v-if="itemsList.length">
+                <div
+                  v-for="items in itemsList"
+                  :key="items[labelKey]"
+                  class="text-gold-300 w-full px-4 py-3 text-sm leading-5 text-left cursor-pointer font-medium hover:bg-dark-600 transition ease-in-out focus:bg-dark-500"
+                  @click="onDataSelect(items, close)"
+                >
+                  {{ items[labelName] }}
+                </div>
+              </template>
+              <template v-else>
+                <div
+                  class="text-gold-300 px-4 py-3 text-sm leading-5 text-center"
+                >
+                  <template v-if="isSearching"
+                    >searching "{{ selected }}"</template
+                  >
+                  <template v-else-if="isSearched && !isSearching">
+                    "{{ selected }}" did not match any "{{ label }}".
+                  </template>
+                </div>
+              </template>
+            </div>
+          </div>
+        </transition>
+      </div>
+    </template>
+  </popover>
 </template>
 
 <script>
@@ -76,8 +74,8 @@ export default {
     },
     itemsList: {
       type: Array,
-      default: []
-    }
+      default: () => []
+    },
     modelValue: {
       type: [String, Number],
       default: null
@@ -93,12 +91,6 @@ export default {
     }
   },
   computed: {
-    onDataSelect(dataSelected, close) {
-        alert(dataSelected)
-        //emit data to parent
-    //   this.submitForm(this.params)
-      close()
-    },
     onSearchSubmit() {
       //emit for get detail
       return debounce(this.getDataSeatch, 500)
@@ -110,13 +102,16 @@ export default {
       return (selected && selected.label) || 'All'
     },
     isSearchResultShow() {
-      return (
-        this.selected &&
-        (this.isSearched || this.isSearching)
-      )
+      return this.selected && (this.isSearched || this.isSearching)
     }
   },
   methods: {
+    onDataSelect(dataSelected, close) {
+      alert(dataSelected)
+      //emit data to parent
+      //   this.submitForm(this.params)
+      close()
+    },
     onSearchChange(event) {
       const { value } = event.target
       if (value) {
@@ -124,7 +119,7 @@ export default {
       }
     },
     getDataSeatch() {
-    //   this.propertyList = dataList
+      //   this.propertyList = dataList
       this.isSearching = false
       this.isSearched = true
     }

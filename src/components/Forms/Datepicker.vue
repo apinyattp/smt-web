@@ -7,19 +7,31 @@
     :class="additionalSelectClass"
     tabindex="-1"
   >
-    <flat-pickr v-model="date" class="invisible absolute" :config="config" />
+    <flat-pickr
+      ref="flatpickrEl"
+      v-model="date"
+      class="invisible absolute"
+      :config="config"
+    />
     <div class="relative flex items-center mx-2 z-0" data-toggle>
       <vue-feather
         v-if="prefixIcon"
         class="mr-3"
         :type="prefixIcon"
       ></vue-feather>
-      <span class="font-medium text-lg">{{ selectedLabel }}</span>
-      <vue-feather
-        class="ml-auto"
-        type="chevron-down"
-        stroke-width="1"
-      ></vue-feather>
+      <span class="font-medium text-lg mr-auto">{{ selectedLabel }}</span>
+      <transition name="fade" mode="out-in"
+        ><vue-feather
+          v-if="date"
+          type="x-circle"
+          class="flex-none"
+          size="20"
+          data-clear
+          @click.stop="clearDate"
+      /></transition>
+      <caret-down
+        class="caret-icon transform h-4 w-4 transition duration-300 ml-3"
+      />
     </div>
   </div>
 </template>
@@ -29,10 +41,12 @@
 import flatPickr from 'vue-flatpickr-component'
 import 'flatpickr/dist/flatpickr.css'
 import 'flatpickr/dist/themes/dark.css'
+import CaretDown from '../Icons/CaretDown.vue'
 
 export default {
   components: {
-    flatPickr
+    flatPickr,
+    CaretDown
   },
   props: {
     prefixIcon: {
@@ -92,8 +106,17 @@ export default {
     }
   },
   methods: {
+    clearDate() {
+      this.$refs.flatpickrEl.fp.clear()
+    }
   }
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.dropdown:focus-within {
+  .caret-icon {
+    transform: rotate(180deg);
+  }
+}
+</style>
