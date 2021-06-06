@@ -132,7 +132,7 @@ export default {
       a_lists: [],
       es_type: {},
       sourceList: {
-        'not line': 'not_line'
+        'All': 'not_line'
       },
       contentViewList: {
         1: 'ดูแล้ว',
